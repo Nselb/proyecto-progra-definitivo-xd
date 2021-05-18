@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -12,8 +13,9 @@ public class UIManager : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        MainMenu.SetActive(true);
+        SettingsMenu.SetActive(false);
     }
-
     private void Update()
     {
         if (Keyboard.current.escapeKey.wasPressedThisFrame && SettingsMenu.activeSelf)
@@ -21,7 +23,6 @@ public class UIManager : MonoBehaviour
             OnBackClicked();
         }
     }
-
     public void OnClickExit()
     {
         Application.Quit(0);
@@ -34,14 +35,15 @@ public class UIManager : MonoBehaviour
     {
         MainMenu.SetActive(false);
         SettingsMenu.SetActive(true);
-    }
-    public void OnClickContinue()
-    {
-
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
     public void OnBackClicked()
     {
         MainMenu.SetActive(true);
         SettingsMenu.SetActive(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        EventSystem.current.SetSelectedGameObject(GameObject.FindWithTag("NewGame"));
     }
 }
