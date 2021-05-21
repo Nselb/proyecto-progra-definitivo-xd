@@ -23,21 +23,27 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         transform.Translate(_movement * speed * Time.deltaTime, Space.Self);
-        if (Keyboard.current.eKey.wasPressedThisFrame)
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit))
         {
-            farmingImage.fillAmount = 0;
-            StartCoroutine("Collect");
-        }
-        if (!Keyboard.current.eKey.isPressed)
-        {
-            farmingImage.fillAmount = 0;
-            StopCoroutine("Collect");
+            if (hit.collider.gameObject.CompareTag("Recolectable"))
+            {
+                if (Keyboard.current.eKey.wasPressedThisFrame)
+                {
+                    farmingImage.fillAmount = 0;
+                    StartCoroutine("Collect", hit.collider.gameObject);
+                }
+                if (!Keyboard.current.eKey.isPressed)
+                {
+                    farmingImage.fillAmount = 0;
+                    StopCoroutine("Collect");
+                }
+            }
         }
     }
 
-    IEnumerator Collect()
+    IEnumerator Collect(GameObject collectable)
     {
-        while (vida > 0)
+        while (collectable.GetComponent<Collectable>().vida > 0)
         {
             yield return new WaitForSeconds(.28f);
             vida -= 10;
