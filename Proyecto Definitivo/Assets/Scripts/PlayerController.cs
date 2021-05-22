@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     public float speed = 10f;
-    public float rayDistance = 5f;
+    public float collectDistance = 5f;
     private Vector3 _movement;
     public Image farmingImage;
     public Image toolImage;
@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, rayDistance);
+        Gizmos.DrawWireSphere(transform.position, collectDistance);
     }
     void Update()
     {
@@ -37,12 +37,12 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * 100f);
 
         int sphereLayer = 1 << 7;
-        int rayLayer = ~(1<<8);
+        int rayLayer = ~(1 << 8);
         if (Physics.Raycast(ray, out RaycastHit hit, 80f, rayLayer))
         {
             bool inRange = false;
             GameObject other = hit.collider.gameObject;
-            foreach (var item in Physics.OverlapSphere(transform.position, rayDistance, sphereLayer))
+            foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, sphereLayer))
             {
                 if (other.Equals(item.gameObject))
                 {
@@ -100,28 +100,28 @@ public class PlayerController : MonoBehaviour
     }
     private void SetActiveImages(bool value, ResourceType type)
     {
-        farmingImage.gameObject.SetActive(value);
         switch (type)
         {
             case ResourceType.Rock:
                 toolImage.sprite = toolSprites[0];
-            break;
-            case ResourceType.Wood:
-                toolImage.sprite = toolSprites[1];
-            break;
+                break;
             case ResourceType.Metal:
                 toolImage.sprite = toolSprites[0];
-            break;
+                break;
+            case ResourceType.Wood:
+                toolImage.sprite = toolSprites[1];
+                break;
             case ResourceType.Leather:
                 toolImage.sprite = toolSprites[3];
-            break;
+                break;
             case ResourceType.Plant:
                 toolImage.sprite = toolSprites[2];
-            break;
+                break;
             case ResourceType.All:
                 toolImage.gameObject.SetActive(value);
                 break;
         }
+        farmingImage.gameObject.SetActive(value);
         toolImage.gameObject.SetActive(value);
     }
 }
