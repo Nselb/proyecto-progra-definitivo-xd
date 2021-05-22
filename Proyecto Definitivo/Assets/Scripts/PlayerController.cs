@@ -36,12 +36,13 @@ public class PlayerController : MonoBehaviour
         transform.Translate(_movement * speed * Time.deltaTime);
         Debug.DrawRay(ray.origin, ray.direction * 100f);
 
-        int layerMask = 1 << 7;
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        int sphereLayer = 1 << 7;
+        int rayLayer = ~(1<<8);
+        if (Physics.Raycast(ray, out RaycastHit hit, 80f, rayLayer))
         {
             bool inRange = false;
             GameObject other = hit.collider.gameObject;
-            foreach (var item in Physics.OverlapSphere(transform.position, rayDistance, layerMask))
+            foreach (var item in Physics.OverlapSphere(transform.position, rayDistance, sphereLayer))
             {
                 if (other.Equals(item.gameObject))
                 {
