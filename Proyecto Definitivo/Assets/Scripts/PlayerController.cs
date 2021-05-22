@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     public float speed = 10f;
+    public float rayDistance = 5f;
     private Vector3 _movement;
     public Image farmingImage;
     public Image toolImage;
