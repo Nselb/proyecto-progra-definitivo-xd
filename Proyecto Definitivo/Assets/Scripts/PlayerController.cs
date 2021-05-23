@@ -13,15 +13,16 @@ public class PlayerController : MonoBehaviour
     public Image toolImage;
     public Sprite[] toolSprites;
     public Texture2D cursorTexture;
-    [Range(0,1)]
+    [Range(0, 1)]
     public float mouseSpeed;
+    public Vector2 mouseOffset;
     private Camera mainCamera;
     private void Start()
     {
         mainCamera = Camera.main;
         Cursor.lockState = CursorLockMode.Confined;
         SetActiveImages(false, ResourceType.All);
-        Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
+        Cursor.SetCursor(cursorTexture, mouseOffset, CursorMode.Auto);
     }
     void OnMove(InputValue playerActions)
     {
@@ -32,7 +33,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Mouse.current.rightButton.isPressed)
         {
-            transform.eulerAngles += (new Vector3(0f,mouseLook.Get<Vector2>().x,0f).normalized * mouseSpeed);
+            transform.eulerAngles += (new Vector3(0f, mouseLook.Get<Vector2>().x, 0f).normalized * mouseSpeed);
         }
     }
     private void OnDrawGizmos()
@@ -40,7 +41,7 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, collectDistance);
     }
     void Update()
-    {
+    {   
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         transform.Translate(_movement * speed * Time.deltaTime);
         Debug.DrawRay(ray.origin, ray.direction * 100f);
