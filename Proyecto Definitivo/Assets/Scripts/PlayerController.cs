@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     public Image toolImage;
     public Sprite[] toolSprites;
     public Texture2D cursorTexture;
+    [Range(0,1)]
+    public float mouseSpeed;
     private Camera mainCamera;
     private void Start()
     {
@@ -26,6 +28,13 @@ public class PlayerController : MonoBehaviour
         _movement.x = playerActions.Get<Vector2>().x;
         _movement.z = playerActions.Get<Vector2>().y;
     }
+    void OnLook(InputValue mouseLook)
+    {
+        if (Mouse.current.rightButton.isPressed)
+        {
+            transform.eulerAngles += (new Vector3(0f,mouseLook.Get<Vector2>().x,0f).normalized * mouseSpeed);
+        }
+    }
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, collectDistance);
@@ -35,7 +44,7 @@ public class PlayerController : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         transform.Translate(_movement * speed * Time.deltaTime);
         Debug.DrawRay(ray.origin, ray.direction * 100f);
-
+        #region COLLECT
         int sphereLayer = 1 << 7;
         int rayLayer = ~(1 << 8);
         if (Physics.Raycast(ray, out RaycastHit hit, 80f, rayLayer))
@@ -80,6 +89,7 @@ public class PlayerController : MonoBehaviour
             SetActiveImages(false, ResourceType.All);
             StopCoroutine("Collect");
         }
+        #endregion
     }
     IEnumerator Collect(GameObject collectable)
     {
