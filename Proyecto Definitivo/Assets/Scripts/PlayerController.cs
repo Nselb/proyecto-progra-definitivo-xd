@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         SetActiveImages(false, ResourceType.All);
         Cursor.SetCursor(cursorTexture, mouseOffset, CursorMode.Auto);
+        Cursor.visible = true;
     }
     void OnMove(InputValue playerActions)
     {
@@ -104,7 +105,7 @@ public class PlayerController : MonoBehaviour
                 t += Time.deltaTime;
                 yield return null;
             }
-            c.vida -= 10;
+            c.vida --;
             farmingImage.fillAmount = 0;
         }
         c.Die();

@@ -5,13 +5,17 @@ using UnityEngine;
 public class EnemyScript : MonoBehaviour
 {
     public GameObject player;
+    public float speed;
     public float detectionDistance;
+    public float attackRange;
     private Animator animator;
     private bool nearPlayer;
+    private bool attacking;
     void Start()
     {
         animator = GetComponent<Animator>();
         StartCoroutine("SearchForPlayer");
+        speed /= 1000f;
     }
     private void Update()
     {
@@ -20,6 +24,10 @@ public class EnemyScript : MonoBehaviour
         {
             transform.LookAt(player.transform);
             StartCoroutine("FollowPlayer");
+        }
+        else
+        {
+            StopCoroutine("FollowPlayer");
         }
     }
 
@@ -33,7 +41,21 @@ public class EnemyScript : MonoBehaviour
     }
     IEnumerator FollowPlayer()
     {
-        Debug.Log("Following");
-        yield return new WaitForSeconds(1f);
+        while (Vector3.Distance(transform.position, player.transform.position) > attackRange)
+        {
+            attacking = false;
+            animator.SetBool("Attack", attacking);
+            StopCoroutine("AttackPlayer");
+            transform.position += transform.forward * speed;
+            yield return new WaitForSeconds(.5f);
+        }
+        attacking = true;
+        StartCoroutine("AttackPlayer");
+    }
+    IEnumerator AttackPlayer()
+    {
+        StopCoroutine("FollowPlayer");
+        animator.SetBool("Attack", attacking);
+        yield return null;
     }
 }
