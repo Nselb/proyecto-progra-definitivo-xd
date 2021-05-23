@@ -3978,6 +3978,19 @@ MonoBehaviour:
   vida: 0
   dureza: 0
   type: 0
+--- !u!135 &343095733
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343095731}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.7365632
+  m_Center: {x: -0.010572374, y: -0.067008734, z: 0.024661958}
 --- !u!4 &344309725 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4150572802275372, guid: 7a301152df2624e528fa26cc23cffeb3, type: 3}
@@ -6199,6 +6212,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: enchantedforest_bush_4
       objectReference: {fileID: 0}
+    - target: {fileID: 1194237144135114, guid: 6c13e05b322474b1b9e5e64a664694d7, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1194237144135114, guid: 6c13e05b322474b1b9e5e64a664694d7, type: 3}
+      propertyPath: m_TagString
+      value: Recolectable
+      objectReference: {fileID: 0}
     - target: {fileID: 4708353823052640, guid: 6c13e05b322474b1b9e5e64a664694d7, type: 3}
       propertyPath: m_RootOrder
       value: 250
@@ -7531,6 +7552,10 @@ PrefabInstance:
     - target: {fileID: 1249238344882998, guid: c7f6e865afc8d49f49df5172864ea8f3, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1249238344882998, guid: c7f6e865afc8d49f49df5172864ea8f3, type: 3}
+      propertyPath: m_TagString
+      value: Recolectable
       objectReference: {fileID: 0}
     - target: {fileID: 1816193669713074, guid: c7f6e865afc8d49f49df5172864ea8f3, type: 3}
       propertyPath: m_Layer
@@ -10751,6 +10776,19 @@ MonoBehaviour:
   vida: 0
   dureza: 0
   type: 0
+--- !u!135 &974842761
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 974842759}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.7365632
+  m_Center: {x: -0.010572374, y: -0.067008734, z: 0.024661958}
 --- !u!1001 &977339521
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12894,6 +12932,26 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4053664342447664, guid: cb81c6274498c428fbac535c1c5de3e4, type: 3}
   m_PrefabInstance: {fileID: 203371039}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1211483125 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1249238344882998, guid: c7f6e865afc8d49f49df5172864ea8f3, type: 3}
+  m_PrefabInstance: {fileID: 669142573}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1211483126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1211483125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9280b0951242a0a4cb9d3df9a7209349, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vida: 0
+  dureza: 0
+  type: 0
 --- !u!4 &1222063506 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4704091761565136, guid: e51dacf9e37604c14a6831a59a1dcbc7, type: 3}
@@ -19750,6 +19808,19 @@ MonoBehaviour:
   vida: 0
   dureza: 0
   type: 0
+--- !u!135 &1849963726
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849963724}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.7365634
+  m_Center: {x: -0.0105723785, y: -0.06700873, z: 0.024722997}
 --- !u!1 &1853638532 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1706610291850926, guid: 7561da044a00645e39d086b91c138738, type: 3}
@@ -21428,6 +21499,19 @@ MonoBehaviour:
   vida: 0
   dureza: 0
   type: 0
+--- !u!135 &2026589306
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026589304}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.7365634
+  m_Center: {x: -0.010572375, y: -0.067008734, z: 0.024722997}
 --- !u!4 &2031805065 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4845379153532556, guid: 021c0694291954181b57883b69e4a6c4, type: 3}
