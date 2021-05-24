@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -799,6 +799,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &46316451 stripped
 Transform:
@@ -3136,6 +3137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &246033827 stripped
 Transform:
@@ -3486,6 +3488,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &300816675 stripped
 Transform:
@@ -3903,6 +3906,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 50
   dureza: 1.8
+  dropQuantity: 0
   type: 3
 --- !u!135 &343095733
 SphereCollider:
@@ -4405,6 +4409,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &391609282 stripped
 Transform:
@@ -4959,6 +4964,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &424509350 stripped
 Transform:
@@ -4984,6 +4990,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &427998088 stripped
 Transform:
@@ -5577,6 +5584,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &477019824 stripped
 Transform:
@@ -5740,9 +5748,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9280b0951242a0a4cb9d3df9a7209349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 0
-  dureza: 0
-  type: 0
+  vida: 2
+  dureza: 2
+  dropQuantity: 1
+  type: 5
 --- !u!1001 &507138615
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6282,6 +6291,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 100
   dureza: 1.5
+  dropQuantity: 0
   type: 0
 --- !u!4 &536822162 stripped
 Transform:
@@ -6305,8 +6315,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9280b0951242a0a4cb9d3df9a7209349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 3
-  dureza: 5
+  vida: 4
+  dureza: 4
+  dropQuantity: 2
   type: 1
 --- !u!4 &543554974 stripped
 Transform:
@@ -6394,6 +6405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &556657831 stripped
 Transform:
@@ -6629,6 +6641,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &573792719 stripped
 Transform:
@@ -6789,6 +6802,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!1001 &599625408
 PrefabInstance:
@@ -6883,6 +6897,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!1001 &607849155
 PrefabInstance:
@@ -6990,7 +7005,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4251409082942358, guid: 33b828b8f1c31334988de54e3fe47ee6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 16.135101
+      value: 30.6
       objectReference: {fileID: 0}
     - target: {fileID: 4251409082942358, guid: 33b828b8f1c31334988de54e3fe47ee6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6998,7 +7013,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4251409082942358, guid: 33b828b8f1c31334988de54e3fe47ee6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 601.1155
+      value: 621.8
       objectReference: {fileID: 0}
     - target: {fileID: 4251409082942358, guid: 33b828b8f1c31334988de54e3fe47ee6, type: 3}
       propertyPath: m_LocalRotation.w
@@ -7558,8 +7573,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9280b0951242a0a4cb9d3df9a7209349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 0
-  dureza: 0
+  vida: 5
+  dureza: 6
+  dropQuantity: 2
   type: 0
 --- !u!4 &689393854 stripped
 Transform:
@@ -8475,6 +8491,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!1001 &802080595
 PrefabInstance:
@@ -9090,6 +9107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &858537749 stripped
 Transform:
@@ -10189,9 +10207,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9280b0951242a0a4cb9d3df9a7209349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 0
-  dureza: 0
-  type: 0
+  vida: 3
+  dureza: 2
+  dropQuantity: 1
+  type: 5
 --- !u!1001 &966211329
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10306,6 +10325,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 10
   dureza: 8
+  dropQuantity: 0
   type: 0
 --- !u!135 &974842761
 SphereCollider:
@@ -10541,9 +10561,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9280b0951242a0a4cb9d3df9a7209349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 0
-  dureza: 0
-  type: 0
+  vida: 3
+  dureza: 2
+  dropQuantity: 1
+  type: 5
 --- !u!1001 &1005729496
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11214,6 +11235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!1 &1070446663 stripped
 GameObject:
@@ -11234,7 +11256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 275157613}
   speed: 8
-  detectionDistance: 40
+  detectionDistance: 15
   attackRange: 3
 --- !u!136 &1070446666
 CapsuleCollider:
@@ -12503,6 +12525,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &1222063506 stripped
 Transform:
@@ -12538,7 +12561,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4468419111988058, guid: c9aa4a3148596484c8c90684cad71854, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 118.9129
+      value: 119.46
       objectReference: {fileID: 0}
     - target: {fileID: 4468419111988058, guid: c9aa4a3148596484c8c90684cad71854, type: 3}
       propertyPath: m_LocalPosition.z
@@ -13744,6 +13767,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1383432e870134e1b9cb03df9aa9106f, type: 3}
+--- !u!1 &1356449006 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100004, guid: 95788e7260b93224e9cfd19cc653a6bc, type: 3}
+  m_PrefabInstance: {fileID: 1239617653}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1356449007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1356449006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9280b0951242a0a4cb9d3df9a7209349, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vida: 3
+  dureza: 5
+  dropQuantity: 2
+  type: 2
 --- !u!1001 &1356853893
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14304,8 +14348,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9280b0951242a0a4cb9d3df9a7209349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 0
-  dureza: 0
+  vida: 5
+  dureza: 6
+  dropQuantity: 2
   type: 0
 --- !u!1 &1406188682 stripped
 GameObject:
@@ -14326,6 +14371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!1001 &1407954763
 PrefabInstance:
@@ -14968,9 +15014,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9280b0951242a0a4cb9d3df9a7209349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 0
-  dureza: 0
-  type: 0
+  vida: 2
+  dureza: 2
+  dropQuantity: 1
+  type: 1
 --- !u!1001 &1441979383
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15226,6 +15273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!1 &1473533878 stripped
 GameObject:
@@ -15246,6 +15294,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &1473752613 stripped
 Transform:
@@ -15876,6 +15925,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!1001 &1572282943
 PrefabInstance:
@@ -16497,8 +16547,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9280b0951242a0a4cb9d3df9a7209349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 0
-  dureza: 0
+  vida: 5
+  dureza: 6
+  dropQuantity: 2
   type: 0
 --- !u!1001 &1606576538
 PrefabInstance:
@@ -17038,6 +17089,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!1001 &1664222947
 PrefabInstance:
@@ -17829,8 +17881,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9280b0951242a0a4cb9d3df9a7209349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 0
-  dureza: 0
+  vida: 4
+  dureza: 4
+  dropQuantity: 2
   type: 0
 --- !u!4 &1706810555 stripped
 Transform:
@@ -18503,8 +18556,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9280b0951242a0a4cb9d3df9a7209349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 0
-  dureza: 0
+  vida: 5
+  dureza: 6
+  dropQuantity: 2
   type: 0
 --- !u!4 &1830598059 stripped
 Transform:
@@ -18530,6 +18584,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!1001 &1839017462
 PrefabInstance:
@@ -18821,6 +18876,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 50
   dureza: 1.8
+  dropQuantity: 0
   type: 0
 --- !u!135 &1849963726
 SphereCollider:
@@ -18854,6 +18910,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!1001 &1855962531
 PrefabInstance:
@@ -19449,6 +19506,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &1920263523 stripped
 Transform:
@@ -19568,6 +19626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!4 &1941157632 stripped
 Transform:
@@ -19787,9 +19846,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9280b0951242a0a4cb9d3df9a7209349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 0
-  dureza: 0
-  type: 0
+  vida: 2
+  dureza: 2
+  dropQuantity: 1
+  type: 5
 --- !u!4 &1968212753 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4653033324559612, guid: 6a795ebc8fb3847c49aadadb856a09de, type: 3}
@@ -19888,6 +19948,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!1 &1972001031 stripped
 GameObject:
@@ -19908,6 +19969,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 0
   dureza: 0
+  dropQuantity: 0
   type: 0
 --- !u!1 &1978563730
 GameObject:
@@ -20275,6 +20337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 50
   dureza: 1.8
+  dropQuantity: 0
   type: 0
 --- !u!135 &2026589306
 SphereCollider:
