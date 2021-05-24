@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 _movement;
     private Camera mainCamera;
     private CharacterController controller;
+    [SerializeField]
     private Vector3 playerVelocity;
     private GameObject ui;
     private void Start()
@@ -53,16 +54,16 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         bool isGrounded = controller.isGrounded;
-        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         if (isGrounded && playerVelocity.y < 0)
         {
             playerVelocity.y = 0f;
         }
+        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         Vector3 move = transform.right.normalized * _movement.x + transform.forward.normalized * _movement.z;
         move.y = 0;
         controller.Move(move * speed * Time.deltaTime);
         playerVelocity.y += gravity * Time.deltaTime;
-        if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
+        if (Keyboard.current.spaceKey.isPressed && isGrounded)
         {
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
         }
