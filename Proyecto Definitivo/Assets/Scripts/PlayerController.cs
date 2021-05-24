@@ -1,22 +1,29 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
     public float speed = 10f;
+    public float jumpHeight = 3f;
+    public float gravity = -9.81f;
     public float collectDistance = 5f;
-    private Vector3 _movement;
+    public LayerMask sphereLayer;
+    [Range(0, 1)]
+    public float mouseSpeed;
+    public GameObject collectInfo;
     public Image farmingImage;
     public Image toolImage;
     public Sprite[] toolSprites;
     public Texture2D cursorTexture;
-    [Range(0, 1)]
-    public float mouseSpeed;
-    public Vector2 mouseOffset;
+    private Vector2 mouseOffset = new Vector2(80, 50);
+    private Vector3 _movement;
     private Camera mainCamera;
+    private CharacterController controller;
+    private Vector3 playerVelocity;
+    private GameObject ui;
     private void Start()
     {
         mainCamera = Camera.main;
@@ -24,6 +31,8 @@ public class PlayerController : MonoBehaviour
         SetActiveImages(false, ResourceType.All);
         Cursor.SetCursor(cursorTexture, mouseOffset, CursorMode.Auto);
         Cursor.visible = true;
+        controller = GetComponent<CharacterController>();
+        ui = transform.GetChild(0).gameObject;
     }
     void OnMove(InputValue playerActions)
     {
@@ -42,12 +51,23 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, collectDistance);
     }
     void Update()
-    {   
+    {
+        bool isGrounded = controller.isGrounded;
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        transform.Translate(_movement * speed * Time.deltaTime);
-        Debug.DrawRay(ray.origin, ray.direction * 100f);
+        if (isGrounded && playerVelocity.y < 0)
+        {
+            playerVelocity.y = 0f;
+        }
+        Vector3 move = transform.right.normalized * _movement.x + transform.forward.normalized * _movement.z;
+        move.y = 0;
+        controller.Move(move * speed * Time.deltaTime);
+        playerVelocity.y += gravity * Time.deltaTime;
+        if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
+        {
+            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
+        }
+        controller.Move(playerVelocity * Time.deltaTime);
         #region COLLECT
-        int sphereLayer = 1 << 7;
         int rayLayer = ~(1 << 8);
         if (Physics.Raycast(ray, out RaycastHit hit, 80f, rayLayer))
         {
@@ -105,10 +125,19 @@ public class PlayerController : MonoBehaviour
                 t += Time.deltaTime;
                 yield return null;
             }
-            c.vida --;
+            c.vida--;
             farmingImage.fillAmount = 0;
+            StartCoroutine("ShowInfoText", c);
         }
         c.Die();
+    }
+    IEnumerator ShowInfoText(Collectable collectable)
+    {
+        GameObject text = Instantiate(collectInfo, Vector2.zero, Quaternion.identity);
+        text.transform.SetParent(ui.transform, false);
+        Destroy(text, collectable.dureza);
+        text.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = $"+{collectable.dropQuantity} {collectable.type.ToString()}";
+        yield return null;
     }
     private void SetActiveImages(bool value, ResourceType type)
     {

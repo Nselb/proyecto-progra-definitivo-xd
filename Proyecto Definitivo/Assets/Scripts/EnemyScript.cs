@@ -11,18 +11,21 @@ public class EnemyScript : MonoBehaviour
     private Animator animator;
     private bool nearPlayer;
     private bool attacking;
+    private Rigidbody rb;
     void Start()
     {
         animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
         StartCoroutine("SearchForPlayer");
-        speed /= 1000f;
     }
     private void Update()
     {
         animator.SetBool("NearPlayer", nearPlayer);
         if (nearPlayer)
         {
-            transform.LookAt(player.transform);
+            Vector3 lookAt = player.transform.position;
+            lookAt.y = 0;
+            transform.LookAt(lookAt);
             StartCoroutine("FollowPlayer");
         }
         else
@@ -46,7 +49,7 @@ public class EnemyScript : MonoBehaviour
             attacking = false;
             animator.SetBool("Attack", attacking);
             StopCoroutine("AttackPlayer");
-            transform.position += transform.forward * speed;
+            rb.velocity = transform.forward * speed;
             yield return new WaitForSeconds(.5f);
         }
         attacking = true;
