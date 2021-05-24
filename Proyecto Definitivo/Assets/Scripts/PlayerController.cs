@@ -17,12 +17,12 @@ public class PlayerController : MonoBehaviour
     public Image farmingImage;
     public Image toolImage;
     public Sprite[] toolSprites;
+    public Sprite[] resourceSprites;
     public Texture2D cursorTexture;
     private Vector2 mouseOffset = new Vector2(80, 50);
     private Vector3 _movement;
     private Camera mainCamera;
     private CharacterController controller;
-    [SerializeField]
     private Vector3 playerVelocity;
     private GameObject ui;
     private void Start()
@@ -136,9 +136,18 @@ public class PlayerController : MonoBehaviour
     {
         GameObject text = Instantiate(collectInfo, Vector2.zero, Quaternion.identity);
         text.transform.SetParent(ui.transform, false);
-        Destroy(text, collectable.dureza);
-        text.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = $"+{collectable.dropQuantity} {collectable.type.ToString()}";
-        yield return null;
+        text.transform.GetChild(text.transform.childCount - 2).GetComponent<TextMeshProUGUI>().text = $"+{collectable.dropQuantity} {collectable.type.ToString()}";
+        text.transform.GetChild(text.transform.childCount - 1).GetComponent<Image>().sprite = GetResourceSprite(collectable.type);
+        Vector2 pos = text.GetComponent<RectTransform>().anchoredPosition;
+        float t = 0;
+        while (pos.y < 80f)
+        {
+            pos.y = Mathf.Lerp(0f, 80f, t / 1f);
+            t += Time.deltaTime;
+            text.GetComponent<RectTransform>().anchoredPosition = pos;
+            yield return null;
+        }
+        Destroy(text);
     }
     private void SetActiveImages(bool value, ResourceType type)
     {
@@ -165,5 +174,22 @@ public class PlayerController : MonoBehaviour
         }
         farmingImage.gameObject.SetActive(value);
         toolImage.gameObject.SetActive(value);
+    }
+    private Sprite GetResourceSprite(ResourceType type)
+    {
+        switch (type)
+        {
+            case ResourceType.Wood:
+                return resourceSprites[0];
+            case ResourceType.Metal:
+                return resourceSprites[1];
+            case ResourceType.Rock:
+                return resourceSprites[2];
+            case ResourceType.Leather:
+                return resourceSprites[3];
+            case ResourceType.Plant:
+                return resourceSprites[4];
+        }
+        return null;
     }
 }
