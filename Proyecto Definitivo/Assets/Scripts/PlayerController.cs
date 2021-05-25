@@ -162,11 +162,11 @@ public class PlayerController : MonoBehaviour
             case ResourceType.Wood:
                 toolImage.sprite = toolSprites[1];
                 break;
-            case ResourceType.Leather:
-                toolImage.sprite = toolSprites[3];
-                break;
             case ResourceType.Plant:
                 toolImage.sprite = toolSprites[2];
+                break;
+            case ResourceType.Leather:
+                toolImage.sprite = toolSprites[3];
                 break;
             case ResourceType.All:
                 toolImage.gameObject.SetActive(value);
@@ -184,11 +184,11 @@ public class PlayerController : MonoBehaviour
             case ResourceType.Metal:
                 return resourceSprites[1];
             case ResourceType.Rock:
-                return resourceSprites[2];
+                return resourceSprites[1];
             case ResourceType.Leather:
-                return resourceSprites[3];
+                return resourceSprites[2];
             case ResourceType.Plant:
-                return resourceSprites[4];
+                return resourceSprites[3];
         }
         return null;
     }
