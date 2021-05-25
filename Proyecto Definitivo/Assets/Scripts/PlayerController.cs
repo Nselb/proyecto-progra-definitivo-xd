@@ -1,32 +1,93 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
     public float speed = 10f;
-    public float rayDistance = 5f;
-    private Vector3 _movement;
+    public float jumpHeight = 3f;
+    public float gravity = -9.81f;
+    public float collectDistance = 5f;
+    public LayerMask sphereLayer;
+    [Range(0, 1)]
+    public float mouseSpeed;
+    public GameObject collectInfo;
     public Image farmingImage;
+    public Image toolImage;
+    public Sprite[] toolSprites;
+    public Sprite[] resourceSprites;
+    public Texture2D cursorTexture;
+    private Vector2 mouseOffset = new Vector2(80, 50);
+    private Vector3 _movement;
+    private Camera mainCamera;
+    private CharacterController controller;
+    private Vector3 playerVelocity;
+    private GameObject ui;
+    private void Start()
+    {
+        mainCamera = Camera.main;
+        Cursor.lockState = CursorLockMode.Confined;
+        SetActiveImages(false, ResourceType.All);
+        Cursor.SetCursor(cursorTexture, mouseOffset, CursorMode.Auto);
+        Cursor.visible = true;
+        controller = GetComponent<CharacterController>();
+        ui = transform.GetChild(0).gameObject;
+    }
     void OnMove(InputValue playerActions)
     {
         _movement.x = playerActions.Get<Vector2>().x;
         _movement.z = playerActions.Get<Vector2>().y;
     }
-    void OnLook(InputValue playerActions)
+    void OnLook(InputValue mouseLook)
     {
-        //Debug.Log($"Looking? x:{playerActions.Get<Vector2>().x} y:{playerActions.Get<Vector2>().y}");
+        if (Mouse.current.rightButton.isPressed)
+        {
+            transform.eulerAngles += (new Vector3(0f, mouseLook.Get<Vector2>().x, 0f).normalized * mouseSpeed);
+        }
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, collectDistance);
     }
     void Update()
     {
-        Debug.DrawRay(transform.position, transform.forward * rayDistance, Color.red);
-        transform.Translate(_movement * speed * Time.deltaTime, Space.Self);
-        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, rayDistance))
+        bool isGrounded = controller.isGrounded;
+        if (isGrounded && playerVelocity.y < 0)
         {
-            if (hit.collider.gameObject.CompareTag("Recolectable"))
+            playerVelocity.y = 0f;
+        }
+        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Vector3 move = transform.right.normalized * _movement.x + transform.forward.normalized * _movement.z;
+        move.y = 0;
+        controller.Move(move * speed * Time.deltaTime);
+        playerVelocity.y += gravity * Time.deltaTime;
+        if (Keyboard.current.spaceKey.isPressed && isGrounded)
+        {
+            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
+        }
+        controller.Move(playerVelocity * Time.deltaTime);
+        #region COLLECT
+        int rayLayer = ~(1 << 8);
+        if (Physics.Raycast(ray, out RaycastHit hit, 80f, rayLayer))
+        {
+            bool inRange = false;
+            GameObject other = hit.collider.gameObject;
+            foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, sphereLayer))
             {
+                if (other.Equals(item.gameObject))
+                {
+                    inRange = true;
+                    break;
+                }
+                inRange = false;
+            }
+            if (other.CompareTag("Recolectable") && inRange)
+            {
+                SetActiveImages(true, other.GetComponent<Collectable>().type);
+                toolImage.transform.position = Mouse.current.position.ReadValue();
+                farmingImage.transform.position = Mouse.current.position.ReadValue();
                 if (Keyboard.current.eKey.wasPressedThisFrame)
                 {
                     farmingImage.fillAmount = 0;
@@ -38,15 +99,21 @@ public class PlayerController : MonoBehaviour
                     StopCoroutine("Collect");
                 }
             }
-
+            else
+            {
+                farmingImage.fillAmount = 0;
+                SetActiveImages(false, ResourceType.All);
+                StopCoroutine("Collect");
+            }
         }
         else
         {
             farmingImage.fillAmount = 0;
+            SetActiveImages(false, ResourceType.All);
             StopCoroutine("Collect");
         }
+        #endregion
     }
-
     IEnumerator Collect(GameObject collectable)
     {
         Collectable c = collectable.GetComponent<Collectable>();
@@ -55,14 +122,74 @@ public class PlayerController : MonoBehaviour
             float t = 0;
             while (farmingImage.fillAmount < 1)
             {
-
                 farmingImage.fillAmount = Mathf.Lerp(0f, 1f, t / c.dureza);
                 t += Time.deltaTime;
                 yield return null;
             }
-            c.vida -= 10;
+            c.vida--;
             farmingImage.fillAmount = 0;
+            StartCoroutine("ShowInfoText", c);
         }
         c.Die();
+    }
+    IEnumerator ShowInfoText(Collectable collectable)
+    {
+        GameObject text = Instantiate(collectInfo, Vector2.zero, Quaternion.identity);
+        text.transform.SetParent(ui.transform, false);
+        text.transform.GetChild(text.transform.childCount - 2).GetComponent<TextMeshProUGUI>().text = $"+{collectable.dropQuantity} {collectable.type.ToString()}";
+        text.transform.GetChild(text.transform.childCount - 1).GetComponent<Image>().sprite = GetResourceSprite(collectable.type);
+        Vector2 pos = text.GetComponent<RectTransform>().anchoredPosition;
+        float t = 0;
+        while (pos.y < 80f)
+        {
+            pos.y = Mathf.Lerp(0f, 80f, t / 1f);
+            t += Time.deltaTime;
+            text.GetComponent<RectTransform>().anchoredPosition = pos;
+            yield return null;
+        }
+        Destroy(text);
+    }
+    private void SetActiveImages(bool value, ResourceType type)
+    {
+        switch (type)
+        {
+            case ResourceType.Rock:
+                toolImage.sprite = toolSprites[0];
+                break;
+            case ResourceType.Metal:
+                toolImage.sprite = toolSprites[0];
+                break;
+            case ResourceType.Wood:
+                toolImage.sprite = toolSprites[1];
+                break;
+            case ResourceType.Leather:
+                toolImage.sprite = toolSprites[3];
+                break;
+            case ResourceType.Plant:
+                toolImage.sprite = toolSprites[2];
+                break;
+            case ResourceType.All:
+                toolImage.gameObject.SetActive(value);
+                break;
+        }
+        farmingImage.gameObject.SetActive(value);
+        toolImage.gameObject.SetActive(value);
+    }
+    private Sprite GetResourceSprite(ResourceType type)
+    {
+        switch (type)
+        {
+            case ResourceType.Wood:
+                return resourceSprites[0];
+            case ResourceType.Metal:
+                return resourceSprites[1];
+            case ResourceType.Rock:
+                return resourceSprites[2];
+            case ResourceType.Leather:
+                return resourceSprites[3];
+            case ResourceType.Plant:
+                return resourceSprites[4];
+        }
+        return null;
     }
 }

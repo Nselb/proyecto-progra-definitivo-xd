@@ -6,6 +6,7 @@ TagManager:
   tags:
   - NewGame
   - Recolectable
+  - Animal
   layers:
   - Default
   - TransparentFX
@@ -14,8 +15,8 @@ TagManager:
   - Water
   - UI
   - 
-  - 
-  - 
+  - Interactable
+  - Player
   - 
   - 
   - 
