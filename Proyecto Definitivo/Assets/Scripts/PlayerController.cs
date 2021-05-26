@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         ui = transform.GetChild(0).gameObject;
         life = ui.transform.GetChild(2).GetComponent<Image>();
-        life.color = new Color(160, 255, 75);
+        life.color = new Color(160/255f, 255/255f, 75/255f);
     }
     void OnMove(InputValue playerActions)
     {
@@ -215,19 +215,19 @@ public class PlayerController : MonoBehaviour
         life.fillAmount = vida / 100f;
         if (vida >= 75)
         {
-            life.color = new Color(150, 255, 40);
+            life.color = new Color(150/255f, 255/255f, 40/255f);
         }
-        if (vida < 75)
+        if (vida < 75 && vida > 50)
         {
-            life.color = new Color(255, 207, 54);
+            life.color = new Color(255/255f, 207/255f, 54/255f);
         }
-        if (vida < 50)
+        if (vida < 50 && vida > 25)
         {
-            life.color = new Color(255, 144, 60);
+            life.color = new Color(255/255f, 144/255f, 60/255f);
         }
-        if (vida < 25)
+        if (vida < 25 )
         {
-            life.color = new Color(255, 80, 59);
+            life.color = new Color(255/255f, 80/255f, 59/255f);
         }
         if (vida <= 0)
         {
