@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private Vector3 playerVelocity;
     private GameObject ui;
+    private Image life;
     private void Start()
     {
         mainCamera = Camera.main;
@@ -41,6 +42,7 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = true;
         controller = GetComponent<CharacterController>();
         ui = transform.GetChild(0).gameObject;
+        life = ui.transform.GetChild(2).GetComponent<Image>();
     }
     void OnMove(InputValue playerActions)
     {
@@ -209,7 +211,7 @@ public class PlayerController : MonoBehaviour
     public void GetDamage(float damage)
     {
         vida -= damage;
-        ui.transform.GetChild(2).GetComponent<Image>().fillAmount = vida / 100f;
+        life.fillAmount = vida / 100f;
         if (vida <= 0)
         {
             Die();
