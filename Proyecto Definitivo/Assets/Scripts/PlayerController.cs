@@ -12,7 +12,9 @@ public class PlayerController : MonoBehaviour
     public float collectDistance = 5f;
     public LayerMask sphereLayer;
     [Range(0, 1)]
-    public float mouseSpeed;
+    public float mouseSpeedX;
+    [Range(0, 1)]
+    public float mouseSpeedY;
     public GameObject collectInfo;
     public Image farmingImage;
     public Image toolImage;
@@ -44,7 +46,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Mouse.current.rightButton.isPressed)
         {
-            transform.eulerAngles += (new Vector3(0f, mouseLook.Get<Vector2>().x, 0f).normalized * mouseSpeed);
+            transform.eulerAngles += (new Vector3(0f, mouseLook.Get<Vector2>().x, 0f).normalized * mouseSpeedX);
+            mainCamera.transform.RotateAround(transform.position, transform.right, -mouseLook.Get<Vector2>().y * mouseSpeedY);
         }
     }
     private void OnDrawGizmos()
@@ -57,6 +60,12 @@ public class PlayerController : MonoBehaviour
         if (isGrounded && playerVelocity.y < 0)
         {
             playerVelocity.y = 0f;
+        }
+        mainCamera.transform.LookAt(transform);
+        if (mainCamera.transform.rotation.eulerAngles.x > 50f)
+        {
+            Debug.Log("Alo?");
+            mainCamera.transform.rotation = Quaternion.Euler(50f, mainCamera.transform.rotation.eulerAngles.y, 0);
         }
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         Vector3 move = transform.right.normalized * _movement.x + transform.forward.normalized * _movement.z;
