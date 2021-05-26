@@ -12666,8 +12666,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 275157613}
-  speed: 8
-  detectionDistance: 15
+  speed: 15
+  detectionDistance: 40
   attackRange: 3
 --- !u!136 &1070446666
 CapsuleCollider:

@@ -49,8 +49,8 @@ public class EnemyScript : MonoBehaviour
             attacking = false;
             animator.SetBool("Attack", attacking);
             StopCoroutine("AttackPlayer");
-            rb.velocity = transform.forward * speed;
-            yield return new WaitForSeconds(.5f);
+            rb.MovePosition(Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime));
+            yield return null;
         }
         attacking = true;
         StartCoroutine("AttackPlayer");
