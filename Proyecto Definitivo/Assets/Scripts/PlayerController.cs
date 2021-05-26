@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviour
             case ResourceType.Wood:
                 return resourceSprites[0];
             case ResourceType.Metal:
-                return resourceSprites[1];
+                return resourceSprites[4];
             case ResourceType.Rock:
                 return resourceSprites[1];
             case ResourceType.Leather:
