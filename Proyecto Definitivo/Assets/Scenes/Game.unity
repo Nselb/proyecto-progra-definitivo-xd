@@ -4101,11 +4101,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b3a100d8344187049b3f8b5c9e5aba88, type: 3}
   - {fileID: 21300000, guid: 2c4df9274f4db1f4eb7118e0b06c4554, type: 3}
   resourceSprites:
-  - {fileID: 21300000, guid: 0138ff996cf7410479c3dfffa5472ee1, type: 3}
-  - {fileID: 21300000, guid: b3a100d8344187049b3f8b5c9e5aba88, type: 3}
-  - {fileID: 21300000, guid: 2c4df9274f4db1f4eb7118e0b06c4554, type: 3}
-  - {fileID: 21300000, guid: 2c4df9274f4db1f4eb7118e0b06c4554, type: 3}
-  - {fileID: 21300000, guid: 2c4df9274f4db1f4eb7118e0b06c4554, type: 3}
+  - {fileID: 21300000, guid: 0383d721ed4ad8948b111249b1c549e8, type: 3}
+  - {fileID: 21300000, guid: e84d08d3cfb7621409b0286239c249e6, type: 3}
+  - {fileID: 21300000, guid: b9fac94596fc4f14797701d64bf807b4, type: 3}
+  - {fileID: 21300000, guid: a7c9dfe8fa353864787a957ae675639a, type: 3}
+  - {fileID: 21300000, guid: 307b8913bc9141446813ecba586b46a9, type: 3}
   cursorTexture: {fileID: 2800000, guid: 5988a2020badc834c96521b52b6a08f5, type: 3}
 --- !u!4 &275157615
 Transform:
