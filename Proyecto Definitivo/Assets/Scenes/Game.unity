@@ -4108,6 +4108,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: a7c9dfe8fa353864787a957ae675639a, type: 3}
   - {fileID: 21300000, guid: 307b8913bc9141446813ecba586b46a9, type: 3}
   cursorTexture: {fileID: 2800000, guid: 5988a2020badc834c96521b52b6a08f5, type: 3}
+  vida: 100
+  comida: 100
+  xp: 0
+  level: 0
+  carga: 0
 --- !u!4 &275157615
 Transform:
   m_ObjectHideFlags: 0
@@ -12674,6 +12679,7 @@ MonoBehaviour:
   speed: 15
   detectionDistance: 40
   attackRange: 3
+  damage: 3.8
 --- !u!136 &1070446666
 CapsuleCollider:
   m_ObjectHideFlags: 0

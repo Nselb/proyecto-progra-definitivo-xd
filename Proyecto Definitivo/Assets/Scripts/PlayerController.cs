@@ -21,6 +21,11 @@ public class PlayerController : MonoBehaviour
     public Sprite[] toolSprites;
     public Sprite[] resourceSprites;
     public Texture2D cursorTexture;
+    public float vida = 100f;
+    public float comida = 100f;
+    public float xp = 0f;
+    public int level;
+    public float carga;
     private Vector2 mouseOffset = new Vector2(80, 50);
     private Vector3 _movement;
     private Camera mainCamera;
@@ -200,5 +205,18 @@ public class PlayerController : MonoBehaviour
                 return resourceSprites[3];
         }
         return null;
+    }
+    public void GetDamage(float damage)
+    {
+        vida -= damage;
+        ui.transform.GetChild(2).GetComponent<Image>().fillAmount = vida / 100f;
+        if (vida <= 0)
+        {
+            Die();
+        }
+    }
+    public void Die()
+    {
+        Destroy(this);
     }
 }
