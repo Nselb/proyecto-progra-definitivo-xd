@@ -24,7 +24,7 @@ public class EnemyScript : MonoBehaviour
         if (nearPlayer)
         {
             Vector3 lookAt = player.transform.position;
-            lookAt.y = 0;
+            lookAt.y = transform.position.y;
             transform.LookAt(lookAt);
             StartCoroutine("FollowPlayer");
         }
