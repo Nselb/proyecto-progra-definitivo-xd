@@ -34,7 +34,6 @@ public class EnemyScript : MonoBehaviour
         if (player.GetComponent<PlayerController>() != null)
         {
             animator.SetBool("NearPlayer", nearPlayer);
-            Debug.Log(attackTime);
             if (nearPlayer)
             {
                 Vector3 lookAt = player.transform.position;
@@ -80,7 +79,6 @@ public class EnemyScript : MonoBehaviour
     }
     IEnumerator FollowPlayer()
     {
-        Debug.Log("Started follow");
         while (distance > attackRange)
         {
             rb.MovePosition(Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime));
