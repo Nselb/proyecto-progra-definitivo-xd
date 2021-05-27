@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
-    public GameObject player;
+    [Header("Enemy Settings")]
+    public float vida;
     public float speed;
     public float detectionDistance;
     public float attackRange;
     public float damage;
+    public GameObject player;
     private Animator animator;
     private bool nearPlayer;
     private bool following;
@@ -68,6 +70,15 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
+    public void GetDamage(float damage)
+    {
+        vida -= damage;
+        if (vida <= 0)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
     IEnumerator SearchForPlayer()
     {
         for (; ; )
@@ -90,7 +101,7 @@ public class EnemyScript : MonoBehaviour
         StopCoroutine("FollowPlayer");
         following = false;
         animator.SetBool("Attack", true);
-        yield return new WaitForSeconds(attackTime - .3f);
+        yield return new WaitForSeconds(attackTime / 1.8f);
         player.GetComponent<PlayerController>().GetDamage(damage);
         attacking = false;
     }

@@ -6,22 +6,27 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-
+    #region PUBLICAS
     [Header("Player Stats")]
     public float vida = 100f;
     public float comida = 100f;
+    public float damage;
     public float xp = 0f;
     public int level;
     public float carga;
+    public float attackRange;
 
     [Header("Player Physics")]
     public float speed = 10f;
     public float jumpHeight = 3f;
     public float gravity = -9.81f;
     public float collectDistance = 5f;
-    public LayerMask sphereLayer;
+    public LayerMask collectLayer;
+    public LayerMask attackLayer;
 
-    [Header("Camera Rotation")]
+    [Header("Camera Settings")]
+    public Transform lookAt;
+    private float distance;
     public float angleMax;
     [Range(0, 1)]
     public float mouseSpeedX;
@@ -37,6 +42,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Misc")]
     public Texture2D cursorTexture;
+    #endregion PUBLICAS
+    #region PRIVADAS
     private Vector2 mouseOffset = new Vector2(80, 50);
     private Vector3 _movement;
     private Camera mainCamera;
@@ -44,10 +51,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerVelocity;
     private GameObject ui;
     private Image life;
-    private Vector3 initialVector;
-    private float rotYAxis;
-    private float rotXAxis;
-    private float distance;
+    private Vector3 cameraTransform;
+    #endregion PRIVADAS
 
     private void Start()
     {
@@ -60,12 +65,8 @@ public class PlayerController : MonoBehaviour
         ui = transform.GetChild(0).gameObject;
         life = ui.transform.GetChild(2).GetComponent<Image>();
         life.color = new Color(160 / 255f, 255 / 255f, 75 / 255f);
-
-        initialVector = mainCamera.transform.position - transform.right;
-        rotYAxis = mainCamera.transform.eulerAngles.y;
-        rotXAxis = mainCamera.transform.eulerAngles.x;
-
-        distance = Vector3.Magnitude(initialVector);
+        cameraTransform = mainCamera.transform.parent.GetComponent<Transform>().localPosition;
+        distance = Vector3.Distance(mainCamera.transform.parent.transform.position, transform.position);
     }
     void OnMove(InputValue playerActions)
     {
@@ -76,12 +77,16 @@ public class PlayerController : MonoBehaviour
     {
         if (Mouse.current.rightButton.isPressed)
         {
+            cameraTransform += new Vector3(0f, mouseLook.Get<Vector2>().normalized.y * mouseSpeedY, 0f);
+            cameraTransform = new Vector3(0f, Mathf.Clamp(cameraTransform.y, 1f, 5f), -Mathf.Sqrt(Mathf.Pow(distance, 2) - Mathf.Pow(cameraTransform.y, 2)));
+            mainCamera.transform.parent.GetComponent<Transform>().localPosition = cameraTransform;
             transform.eulerAngles += (new Vector3(0f, mouseLook.Get<Vector2>().x, 0f).normalized * mouseSpeedX);
         }
     }
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, collectDistance);
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
     void Update()
     {
@@ -90,7 +95,7 @@ public class PlayerController : MonoBehaviour
         {
             playerVelocity.y = 0f;
         }
-        mainCamera.transform.LookAt(transform);
+        mainCamera.transform.LookAt(lookAt);
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         Vector3 move = transform.right.normalized * _movement.x + transform.forward.normalized * _movement.z;
         move.y = 0;
@@ -106,38 +111,73 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 80f, rayLayer))
         {
             bool inRange = false;
+            bool inAttackRange = false;
             GameObject other = hit.collider.gameObject;
-            foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, sphereLayer))
+            if (other.CompareTag("Enemy"))
             {
-                if (other.Equals(item.gameObject))
+                foreach (var item in Physics.OverlapSphere(transform.position, attackRange, attackLayer))
                 {
-                    inRange = true;
-                    break;
+                    if (other.Equals(item.gameObject))
+                    {
+                        inAttackRange = true;
+                        break;
+                    }
+                    inAttackRange = false;
                 }
-                inRange = false;
-            }
-            if (other.CompareTag("Recolectable") && inRange)
-            {
-                SetActiveImages(true, other.GetComponent<Collectable>().type);
-                toolImage.transform.position = Mouse.current.position.ReadValue();
-                farmingImage.transform.position = Mouse.current.position.ReadValue();
-                if (Keyboard.current.eKey.wasPressedThisFrame)
+                if (inAttackRange)
                 {
-                    farmingImage.fillAmount = 0;
-                    StartCoroutine("Collect", hit.collider.gameObject);
+                    toolImage.sprite = toolSprites[3];
+                    toolImage.gameObject.SetActive(true);
+                    toolImage.transform.position = Mouse.current.position.ReadValue();
+                    if (Mouse.current.leftButton.wasPressedThisFrame)
+                    {
+                        other.GetComponent<EnemyScript>().GetDamage(damage);
+                    }
                 }
-                if (!Keyboard.current.eKey.isPressed)
+                else
                 {
-                    farmingImage.fillAmount = 0;
-                    StopCoroutine("Collect");
+                    toolImage.gameObject.SetActive(false);
                 }
             }
             else
             {
-                farmingImage.fillAmount = 0;
-                SetActiveImages(false, ResourceType.All);
-                StopCoroutine("Collect");
+                toolImage.gameObject.SetActive(false);
             }
+            if (other.CompareTag("Recolectable"))
+            {
+                foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, collectLayer))
+                {
+                    if (other.Equals(item.gameObject))
+                    {
+                        inRange = true;
+                        break;
+                    }
+                    inRange = false;
+                }
+                if (inRange)
+                {
+                    SetActiveImages(true, other.GetComponent<Collectable>().type);
+                    toolImage.transform.position = Mouse.current.position.ReadValue();
+                    farmingImage.transform.position = Mouse.current.position.ReadValue();
+                    if (Keyboard.current.eKey.wasPressedThisFrame)
+                    {
+                        farmingImage.fillAmount = 0;
+                        StartCoroutine("Collect", hit.collider.gameObject);
+                    }
+                    if (!Keyboard.current.eKey.isPressed)
+                    {
+                        StopCoroutine("Collect");
+                        farmingImage.fillAmount = 0;
+                    }
+                }
+                else
+                {
+                    farmingImage.fillAmount = 0;
+                    SetActiveImages(false, ResourceType.All);
+                    StopCoroutine("Collect");
+                }
+            }
+
         }
         else
         {
@@ -169,7 +209,7 @@ public class PlayerController : MonoBehaviour
     {
         GameObject text = Instantiate(collectInfo, Vector2.zero, Quaternion.identity);
         text.transform.SetParent(ui.transform, false);
-        text.transform.GetChild(text.transform.childCount - 2).GetComponent<TextMeshProUGUI>().text = $"+{collectable.dropQuantity} {collectable.type.ToString()}";
+        text.transform.GetChild(text.transform.childCount - 2).GetComponent<TextMeshProUGUI>().text = $"+{collectable.dropQuantity}";
         text.transform.GetChild(text.transform.childCount - 1).GetComponent<Image>().sprite = GetResourceSprite(collectable.type);
         Vector2 pos = text.GetComponent<RectTransform>().anchoredPosition;
         float t = 0;
@@ -253,14 +293,5 @@ public class PlayerController : MonoBehaviour
     public void Die()
     {
         Destroy(this);
-    }
-
-    public static float ClampAngle(float angle, float min, float max)
-    {
-        if (angle < -360F)
-            angle += 360F;
-        if (angle > 360F)
-            angle -= 360F;
-        return Mathf.Clamp(angle, min, max);
     }
 }
