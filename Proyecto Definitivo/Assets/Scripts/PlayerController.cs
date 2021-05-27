@@ -6,7 +6,7 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    
+
     [Header("Player Stats")]
     public float vida = 100f;
     public float comida = 100f;
@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     public LayerMask sphereLayer;
 
     [Header("Camera Rotation")]
+    public float angleMax;
     [Range(0, 1)]
     public float mouseSpeedX;
     [Range(0, 1)]
@@ -33,7 +34,7 @@ public class PlayerController : MonoBehaviour
     public Image toolImage;
     public Sprite[] toolSprites;
     public Sprite[] resourceSprites;
-    
+
     [Header("Misc")]
     public Texture2D cursorTexture;
     private Vector2 mouseOffset = new Vector2(80, 50);
@@ -43,6 +44,10 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerVelocity;
     private GameObject ui;
     private Image life;
+    private Vector3 initialVector;
+    private float rotYAxis;
+    private float rotXAxis;
+    private float distance;
 
     private void Start()
     {
@@ -54,7 +59,13 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         ui = transform.GetChild(0).gameObject;
         life = ui.transform.GetChild(2).GetComponent<Image>();
-        life.color = new Color(160/255f, 255/255f, 75/255f);
+        life.color = new Color(160 / 255f, 255 / 255f, 75 / 255f);
+
+        initialVector = mainCamera.transform.position - transform.right;
+        rotYAxis = mainCamera.transform.eulerAngles.y;
+        rotXAxis = mainCamera.transform.eulerAngles.x;
+
+        distance = Vector3.Magnitude(initialVector);
     }
     void OnMove(InputValue playerActions)
     {
@@ -66,7 +77,6 @@ public class PlayerController : MonoBehaviour
         if (Mouse.current.rightButton.isPressed)
         {
             transform.eulerAngles += (new Vector3(0f, mouseLook.Get<Vector2>().x, 0f).normalized * mouseSpeedX);
-            mainCamera.transform.RotateAround(transform.position, transform.right, -mouseLook.Get<Vector2>().y * mouseSpeedY);
         }
     }
     private void OnDrawGizmos()
@@ -81,10 +91,6 @@ public class PlayerController : MonoBehaviour
             playerVelocity.y = 0f;
         }
         mainCamera.transform.LookAt(transform);
-        if (mainCamera.transform.rotation.eulerAngles.x > 50f)
-        {
-            mainCamera.transform.rotation = Quaternion.Euler(50f, mainCamera.transform.rotation.eulerAngles.y, 0);
-        }
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         Vector3 move = transform.right.normalized * _movement.x + transform.forward.normalized * _movement.z;
         move.y = 0;
@@ -225,19 +231,19 @@ public class PlayerController : MonoBehaviour
         life.fillAmount = vida / 100f;
         if (vida >= 75)
         {
-            life.color = new Color(150/255f, 255/255f, 40/255f);
+            life.color = new Color(150 / 255f, 255 / 255f, 40 / 255f);
         }
         if (vida < 75 && vida > 50)
         {
-            life.color = new Color(255/255f, 207/255f, 54/255f);
+            life.color = new Color(255 / 255f, 207 / 255f, 54 / 255f);
         }
         if (vida < 50 && vida > 25)
         {
-            life.color = new Color(255/255f, 144/255f, 60/255f);
+            life.color = new Color(255 / 255f, 144 / 255f, 60 / 255f);
         }
-        if (vida < 25 )
+        if (vida < 25)
         {
-            life.color = new Color(255/255f, 80/255f, 59/255f);
+            life.color = new Color(255 / 255f, 80 / 255f, 59 / 255f);
         }
         if (vida <= 0)
         {
@@ -247,5 +253,14 @@ public class PlayerController : MonoBehaviour
     public void Die()
     {
         Destroy(this);
+    }
+
+    public static float ClampAngle(float angle, float min, float max)
+    {
+        if (angle < -360F)
+            angle += 360F;
+        if (angle > 360F)
+            angle -= 360F;
+        return Mathf.Clamp(angle, min, max);
     }
 }
