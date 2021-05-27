@@ -6,26 +6,36 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 10f;
-    public float jumpHeight = 3f;
-    public float gravity = -9.81f;
-    public float collectDistance = 5f;
-    public LayerMask sphereLayer;
-    [Range(0, 1)]
-    public float mouseSpeedX;
-    [Range(0, 1)]
-    public float mouseSpeedY;
-    public GameObject collectInfo;
-    public Image farmingImage;
-    public Image toolImage;
-    public Sprite[] toolSprites;
-    public Sprite[] resourceSprites;
-    public Texture2D cursorTexture;
+    
+    [Header("Player Stats")]
     public float vida = 100f;
     public float comida = 100f;
     public float xp = 0f;
     public int level;
     public float carga;
+
+    [Header("Player Physics")]
+    public float speed = 10f;
+    public float jumpHeight = 3f;
+    public float gravity = -9.81f;
+    public float collectDistance = 5f;
+    public LayerMask sphereLayer;
+
+    [Header("Camera Rotation")]
+    [Range(0, 1)]
+    public float mouseSpeedX;
+    [Range(0, 1)]
+    public float mouseSpeedY;
+
+    [Header("Recollection")]
+    public GameObject collectInfo;
+    public Image farmingImage;
+    public Image toolImage;
+    public Sprite[] toolSprites;
+    public Sprite[] resourceSprites;
+    
+    [Header("Misc")]
+    public Texture2D cursorTexture;
     private Vector2 mouseOffset = new Vector2(80, 50);
     private Vector3 _movement;
     private Camera mainCamera;
@@ -33,6 +43,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerVelocity;
     private GameObject ui;
     private Image life;
+
     private void Start()
     {
         mainCamera = Camera.main;
@@ -72,7 +83,6 @@ public class PlayerController : MonoBehaviour
         mainCamera.transform.LookAt(transform);
         if (mainCamera.transform.rotation.eulerAngles.x > 50f)
         {
-            Debug.Log("Alo?");
             mainCamera.transform.rotation = Quaternion.Euler(50f, mainCamera.transform.rotation.eulerAngles.y, 0);
         }
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
