@@ -67,6 +67,7 @@ public class PlayerController : MonoBehaviour
         life.color = new Color(160 / 255f, 255 / 255f, 75 / 255f);
         cameraTransform = mainCamera.transform.parent.GetComponent<Transform>().localPosition;
         distance = Vector3.Distance(mainCamera.transform.parent.transform.position, transform.position);
+        farmingImage.fillAmount = 0;
     }
     void OnMove(InputValue playerActions)
     {
@@ -164,10 +165,11 @@ public class PlayerController : MonoBehaviour
                         farmingImage.fillAmount = 0;
                         StartCoroutine("Collect", hit.collider.gameObject);
                     }
-                    if (!Keyboard.current.eKey.isPressed)
+                    if (Keyboard.current.eKey.wasReleasedThisFrame)
                     {
-                        StopCoroutine("Collect");
                         farmingImage.fillAmount = 0;
+                        SetActiveImages(false, ResourceType.All);
+                        StopCoroutine("Collect");
                     }
                 }
                 else
@@ -176,6 +178,12 @@ public class PlayerController : MonoBehaviour
                     SetActiveImages(false, ResourceType.All);
                     StopCoroutine("Collect");
                 }
+            }
+            else
+            {
+                farmingImage.fillAmount = 0;
+                SetActiveImages(false, ResourceType.All);
+                StopCoroutine("Collect");
             }
 
         }
