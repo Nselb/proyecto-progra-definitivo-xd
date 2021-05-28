@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Mouse.current.rightButton.isPressed)
         {
-            cameraTransform += new Vector3(0f, mouseLook.Get<Vector2>().normalized.y * mouseSpeedY, 0f);
+            cameraTransform -= new Vector3(0f, mouseLook.Get<Vector2>().normalized.y * mouseSpeedY, 0f);
             cameraTransform = new Vector3(0f, Mathf.Clamp(cameraTransform.y, 1f, 5f), -Mathf.Sqrt(Mathf.Pow(distance, 2) - Mathf.Pow(cameraTransform.y, 2)));
             mainCamera.transform.parent.GetComponent<Transform>().localPosition = cameraTransform;
             transform.eulerAngles += (new Vector3(0f, mouseLook.Get<Vector2>().x, 0f).normalized * mouseSpeedX);

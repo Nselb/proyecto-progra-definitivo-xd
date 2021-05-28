@@ -13,8 +13,6 @@ public class Collectable : MonoBehaviour
     public ResourceType type;
     public void Die()
     {
-
         Destroy(this.gameObject);
-
     }
 }
