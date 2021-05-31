@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         mainCamera = Camera.main;
-        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.lockState = CursorLockMode.Locked;
         SetActiveImages(false, ResourceType.All);
         Cursor.SetCursor(cursorTexture, mouseOffset, CursorMode.Auto);
         Cursor.visible = true;
@@ -68,6 +68,8 @@ public class PlayerController : MonoBehaviour
         cameraTransform = mainCamera.transform.parent.GetComponent<Transform>().localPosition;
         distance = Vector3.Distance(mainCamera.transform.parent.transform.position, transform.position);
         farmingImage.fillAmount = 0;
+        toolImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
+        farmingImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
     }
     void OnMove(InputValue playerActions)
     {
@@ -76,13 +78,10 @@ public class PlayerController : MonoBehaviour
     }
     void OnLook(InputValue mouseLook)
     {
-        if (Mouse.current.rightButton.isPressed)
-        {
-            cameraTransform -= new Vector3(0f, mouseLook.Get<Vector2>().normalized.y * mouseSpeedY, 0f);
-            cameraTransform = new Vector3(0f, Mathf.Clamp(cameraTransform.y, 1f, 5f), -Mathf.Sqrt(Mathf.Pow(distance, 2) - Mathf.Pow(cameraTransform.y, 2)));
-            mainCamera.transform.parent.GetComponent<Transform>().localPosition = cameraTransform;
-            transform.eulerAngles += (new Vector3(0f, mouseLook.Get<Vector2>().x, 0f).normalized * mouseSpeedX);
-        }
+        cameraTransform -= new Vector3(0f, mouseLook.Get<Vector2>().normalized.y * mouseSpeedY, 0f);
+        cameraTransform = new Vector3(0f, Mathf.Clamp(cameraTransform.y, 1f, 5f), -Mathf.Sqrt(Mathf.Pow(distance, 2) - Mathf.Pow(cameraTransform.y, 2)));
+        mainCamera.transform.parent.GetComponent<Transform>().localPosition = cameraTransform;
+        transform.eulerAngles += (new Vector3(0f, mouseLook.Get<Vector2>().x, 0f).normalized * mouseSpeedX);
     }
     private void OnDrawGizmos()
     {
@@ -129,7 +128,6 @@ public class PlayerController : MonoBehaviour
                 {
                     toolImage.sprite = toolSprites[3];
                     toolImage.gameObject.SetActive(true);
-                    toolImage.transform.position = Mouse.current.position.ReadValue();
                     if (Mouse.current.leftButton.wasPressedThisFrame)
                     {
                         other.GetComponent<EnemyScript>().GetDamage(damage);
@@ -158,8 +156,6 @@ public class PlayerController : MonoBehaviour
                 if (inRange)
                 {
                     SetActiveImages(true, other.GetComponent<Collectable>().type);
-                    toolImage.transform.position = Mouse.current.position.ReadValue();
-                    farmingImage.transform.position = Mouse.current.position.ReadValue();
                     if (Keyboard.current.eKey.wasPressedThisFrame)
                     {
                         farmingImage.fillAmount = 0;
