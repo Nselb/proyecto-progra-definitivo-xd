@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 126097165}
-  m_IndirectSpecularColor: {r: 0.73082966, g: 0.7985114, b: 0.8355451, a: 1}
+  m_IndirectSpecularColor: {r: 0.7308289, g: 0.7985114, b: 0.83554536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1857,13 +1857,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 97852150}
-  m_LocalRotation: {x: 0.1186065, y: -0, z: -0, w: 0.9929414}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.19217491, y: -0, z: -0, w: 0.9813607}
+  m_LocalPosition: {x: 0, y: -0.12, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 616130560}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 13.623, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 22.159, y: 0, z: 0}
 --- !u!1001 &99997451
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4299,7 +4299,7 @@ MonoBehaviour:
     m_Bits: 512
   lookAt: {fileID: 1368968377}
   angleMax: 45
-  mouseSpeedX: 0.698
+  mouseSpeedX: 0.5
   mouseSpeedY: 0.059
   collectInfo: {fileID: 6366767876677164578, guid: 6a13d2dfed8bd644786e7feffe1414b1, type: 3}
   farmingImage: {fileID: 468084048}
