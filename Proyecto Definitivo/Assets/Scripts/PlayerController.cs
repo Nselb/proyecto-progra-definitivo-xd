@@ -27,7 +27,9 @@ public class PlayerController : MonoBehaviour
     [Header("Camera Settings")]
     public Transform lookAt;
     public float maxDistance;
-    public float distance;
+    public float minDistance;
+    [SerializeField]
+    private float distance;
     [Range(1, 10)]
     public float angleMax;
     [Range(0, 1)]
@@ -73,24 +75,31 @@ public class PlayerController : MonoBehaviour
         toolImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
         farmingImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
     }
-    void OnMove(InputValue playerActions)
+    public void OnMove(InputValue playerActions)
     {
         _movement.x = playerActions.Get<Vector2>().x;
         _movement.z = playerActions.Get<Vector2>().y;
     }
-    void OnLook(InputValue mouseLook)
+    public void OnLook(InputValue mouseLook)
     {
         cameraTransform -= new Vector3(0f, mouseLook.Get<Vector2>().normalized.y * mouseSpeedY, 0f);
         cameraTransform = new Vector3(0f, Mathf.Clamp(cameraTransform.y, 1f, angleMax), -Mathf.Sqrt(Mathf.Pow(distance, 2) - Mathf.Pow(cameraTransform.y, 2)));
         mainCamera.transform.parent.GetComponent<Transform>().localPosition = cameraTransform;
         transform.eulerAngles += (new Vector3(0f, mouseLook.Get<Vector2>().x, 0f).normalized * mouseSpeedX);
     }
-    private void OnDrawGizmos()
+    public void OnScroll(InputAction mouseScroll)
     {
-        Gizmos.DrawWireSphere(transform.position, collectDistance);
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        distance += (mouseScroll.ReadValue<Vector2>().y > 0) ? 1 : -1;
+        if (distance > maxDistance)
+        {
+            distance = maxDistance;
+        }
+        if (distance < minDistance)
+        {
+            distance = minDistance;
+        }
     }
-    void Update()
+    public void Update()
     {
         bool isGrounded = controller.isGrounded;
         if (isGrounded && playerVelocity.y < 0)
