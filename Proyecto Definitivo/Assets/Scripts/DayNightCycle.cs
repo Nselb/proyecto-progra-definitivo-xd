@@ -5,7 +5,8 @@ using UnityEngine;
 public class DayNightCycle : MonoBehaviour
 {
     [Range(0f, 1f)]
-    private float time;
+    public float time;
+    public int day;
     public float dayLenght;
     public float startTime = 0.2f;
     private float timeRate;
@@ -34,7 +35,11 @@ public class DayNightCycle : MonoBehaviour
     private void Update()
     {
         time += timeRate * Time.deltaTime;
-        if (time >= 1.0f) time = 0.0f;
+        if (time >= 1.0f)
+        {
+            day++;
+            time = 0.0f;
+        }
         sun.transform.eulerAngles = (time - 0.25f) * noon * 4f;
         moon.transform.eulerAngles = (time - 0.75f) * noon * 4f;
         sun.intensity = sunIntensity.Evaluate(time);
