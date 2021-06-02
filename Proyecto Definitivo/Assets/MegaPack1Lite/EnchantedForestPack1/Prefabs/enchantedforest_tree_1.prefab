@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 4606305320375762}
   - component: {fileID: 33085197010174600}
   - component: {fileID: 23050033702393478}
-  - component: {fileID: 64851373858633676}
   - component: {fileID: 7074448201532174178}
+  - component: {fileID: 5316344879488565064}
+  - component: {fileID: 3519106200773286448}
   m_Layer: 0
   m_Name: enchantedforest_tree_1
   m_TagString: Untagged
@@ -86,20 +87,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64851373858633676
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1706610291850926}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 58f8f17c237104a4ab96510d93f2c23d, type: 3}
 --- !u!114 &7074448201532174178
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,3 +104,29 @@ MonoBehaviour:
   dureza: 4
   dropQuantity: 2
   type: 1
+--- !u!65 &5316344879488565064
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706610291850926}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 1.8777277, y: 4.0158463, z: 2.107995}
+  m_Center: {x: 0.055787206, y: 1.8965664, z: -0.06717634}
+--- !u!65 &3519106200773286448
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706610291850926}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5.844886, y: 1.332367, z: 3.9746344}
+  m_Center: {x: -0.96227336, y: 4.5263014, z: -0.87062585}
