@@ -68,6 +68,10 @@ public class EnemyScript : MonoBehaviour
                 following = false;
             }
         }
+        else
+        {
+            StopAllCoroutines();
+        }
     }
 
     public void GetDamage(float damage)
