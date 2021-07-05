@@ -8,6 +8,7 @@ TagManager:
   - Recolectable
   - Animal
   - Enemy
+  - ArenaIn
   layers:
   - Default
   - TransparentFX

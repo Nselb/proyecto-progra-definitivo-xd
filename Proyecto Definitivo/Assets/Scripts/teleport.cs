@@ -13,9 +13,9 @@ public class teleport : MonoBehaviour
     void Update()
     {      
     }
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
-    other.transform.position = Arenaout.transform.position;
+        other.transform.position = Arenaout.transform.position;
     }
 }
 
