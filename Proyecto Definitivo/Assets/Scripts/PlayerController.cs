@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Misc")]
     public Texture2D cursorTexture;
+    public Transform Arenaout;
     #endregion PUBLICAS
     #region PRIVADAS
     private Vector2 mouseOffset = new Vector2(80, 50);
@@ -66,7 +67,7 @@ public class PlayerController : MonoBehaviour
         Cursor.SetCursor(cursorTexture, mouseOffset, CursorMode.Auto);
         Cursor.visible = true;
         controller = GetComponent<CharacterController>();
-        ui = transform.GetChild(0).gameObject;
+        ui = GameObject.Find("UI");
         life = ui.transform.GetChild(2).GetComponent<Image>();
         life.color = new Color(160 / 255f, 255 / 255f, 75 / 255f);
         cameraTransform = mainCamera.transform.parent.GetComponent<Transform>().localPosition;
@@ -87,17 +88,9 @@ public class PlayerController : MonoBehaviour
         mainCamera.transform.parent.GetComponent<Transform>().localPosition = cameraTransform;
         transform.eulerAngles += (new Vector3(0f, mouseLook.Get<Vector2>().x, 0f).normalized * mouseSpeedX);
     }
-    public void OnScroll(InputAction mouseScroll)
+    public void OnScroll(InputValue mouseScroll)
     {
-        distance += (mouseScroll.ReadValue<Vector2>().y > 0) ? 1 : -1;
-        if (distance > maxDistance)
-        {
-            distance = maxDistance;
-        }
-        if (distance < minDistance)
-        {
-            distance = minDistance;
-        }
+        
     }
     public void Update()
     {
@@ -303,6 +296,13 @@ public class PlayerController : MonoBehaviour
         if (vida <= 0)
         {
             Die();
+        }
+    }
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("ArenaIn"))
+        {
+            transform.position = Arenaout.transform.position;
         }
     }
     public void Die()
