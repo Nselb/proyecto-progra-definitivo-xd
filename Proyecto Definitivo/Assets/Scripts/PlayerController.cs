@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     public float xp = 0f;
     public int level;
     public float carga;
-    public float attackRange;
+    private float attackRange;
 
     [Header("Player Physics")]
     public float speed = 10f;
@@ -24,74 +24,40 @@ public class PlayerController : MonoBehaviour
     public LayerMask collectLayer;
     public LayerMask attackLayer;
 
-    [Header("Camera Settings")]
-    public Transform lookAt;
-    public float maxDistance;
-    public float minDistance;
-    [SerializeField]
-    private float distance;
-    [Range(1, 10)]
-    public float angleMax;
-    [Range(0, 1)]
-    public float mouseSpeedX;
-    [Range(0, 1)]
-    public float mouseSpeedY;
-
     [Header("Recollection")]
     public GameObject collectInfo;
     public Image farmingImage;
     public Image toolImage;
     public Sprite[] toolSprites;
     public Sprite[] resourceSprites;
-
-    [Header("Misc")]
-    public Texture2D cursorTexture;
     public Transform Arenaout;
     #endregion PUBLICAS
     #region PRIVADAS
-    private Vector2 mouseOffset = new Vector2(80, 50);
-    private Vector3 _movement;
     private Camera mainCamera;
     private CharacterController controller;
     private Vector3 playerVelocity;
     private GameObject ui;
     private Image life;
-    private Vector3 cameraTransform;
+    private InputManager inputManager;
+    private Transform cameraTransform;
     #endregion PRIVADAS
 
     private void Start()
     {
         mainCamera = Camera.main;
+        cameraTransform = mainCamera.transform;
         Cursor.lockState = CursorLockMode.Locked;
         SetActiveImages(false, ResourceType.All);
-        Cursor.SetCursor(cursorTexture, mouseOffset, CursorMode.Auto);
-        Cursor.visible = true;
+        inputManager = InputManager.Instance;
         controller = GetComponent<CharacterController>();
         ui = GameObject.Find("UI");
         life = ui.transform.GetChild(2).GetComponent<Image>();
         life.color = new Color(160 / 255f, 255 / 255f, 75 / 255f);
-        cameraTransform = mainCamera.transform.parent.GetComponent<Transform>().localPosition;
-        distance = Vector3.Distance(mainCamera.transform.parent.transform.position, transform.position);
         farmingImage.fillAmount = 0;
         toolImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
         farmingImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
     }
-    public void OnMove(InputValue playerActions)
-    {
-        _movement.x = playerActions.Get<Vector2>().x;
-        _movement.z = playerActions.Get<Vector2>().y;
-    }
-    public void OnLook(InputValue mouseLook)
-    {
-        cameraTransform -= new Vector3(0f, mouseLook.Get<Vector2>().normalized.y * mouseSpeedY, 0f);
-        cameraTransform = new Vector3(0f, Mathf.Clamp(cameraTransform.y, 1f, angleMax), -Mathf.Sqrt(Mathf.Pow(distance, 2) - Mathf.Pow(cameraTransform.y, 2)));
-        mainCamera.transform.parent.GetComponent<Transform>().localPosition = cameraTransform;
-        transform.eulerAngles += (new Vector3(0f, mouseLook.Get<Vector2>().x, 0f).normalized * mouseSpeedX);
-    }
-    public void OnScroll(InputValue mouseScroll)
-    {
-        
-    }
+
     public void Update()
     {
         bool isGrounded = controller.isGrounded;
@@ -99,13 +65,13 @@ public class PlayerController : MonoBehaviour
         {
             playerVelocity.y = 0f;
         }
-        mainCamera.transform.LookAt(lookAt);
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        Vector3 move = transform.right.normalized * _movement.x + transform.forward.normalized * _movement.z;
+        Vector3 move = new Vector3(inputManager.GetPlayerMovement().x, 0f, inputManager.GetPlayerMovement().y);
+        move = cameraTransform.forward * move.z + cameraTransform.right * move.x;
         move.y = 0;
         controller.Move(move * speed * Time.deltaTime);
         playerVelocity.y += gravity * Time.deltaTime;
-        if (Keyboard.current.spaceKey.isPressed && isGrounded)
+        if (inputManager.PlayerJumpedThisFrame() && isGrounded)
         {
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
         }
