@@ -7,7 +7,7 @@
             "actions": [
                 {
                     "name": "Move",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "2b1aff47-0d3b-4f2d-bbc5-a7322ffaf32e",
                     "expectedControlType": "Vector2",
                     "processors": "",
@@ -15,7 +15,7 @@
                 },
                 {
                     "name": "Look",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "6918a299-cc9d-45c3-8bbf-ea15d570c845",
                     "expectedControlType": "Vector2",
                     "processors": "",
@@ -34,6 +34,14 @@
                     "type": "PassThrough",
                     "id": "f601dd39-79e2-42b7-9777-80430b394b50",
                     "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "0717025e-e253-4569-857d-86dc05e8cfb5",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 }
@@ -267,6 +275,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Scroll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a3fabd8b-f0b4-4284-9992-99579d0c7ac4",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
