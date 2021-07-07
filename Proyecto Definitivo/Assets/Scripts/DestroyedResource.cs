@@ -16,7 +16,6 @@ public class DestroyedResource : MonoBehaviour
         StartCoroutine("CheckForRespawn");
         if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, Mathf.Infinity, floorLayer))
         {
-            Debug.Log(hit.collider.gameObject.name);
             transform.position = hit.point;
         }
     }
@@ -26,6 +25,12 @@ public class DestroyedResource : MonoBehaviour
         {
             yield return new WaitForSeconds(dia.dayLenght);
         }
-        Instantiate(resource, this.transform.position, Quaternion.identity);
+        var obj = Instantiate(resource, this.transform.position, Quaternion.identity);
+        obj.transform.localScale = new Vector3(Random.Range(0.5f,1.8f),Random.Range(0.5f,1.8f),Random.Range(0.5f,1.8f));
+        if (Physics.Raycast(obj.transform.position, Vector3.down, out RaycastHit hit, Mathf.Infinity, floorLayer))
+        {
+            obj.transform.position = hit.point + Vector3.up*0.5f;
+        }
+        Destroy(this.gameObject);
     }
 }

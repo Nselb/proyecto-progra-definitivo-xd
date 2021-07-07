@@ -95,8 +95,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f72ac35ca6c88034d9673f30c1993b09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToRespawnInDays: 5
-  resource: {fileID: 100000, guid: 9610e9f82c2a94923b599b88400f3bb6, type: 3}
+  timeToRespawnInDays: 1
+  resource: {fileID: 1699568350153644, guid: 6da02d34fe25044bb93d5c92331942e4, type: 3}
   floorLayer:
     serializedVersion: 2
     m_Bits: 64
