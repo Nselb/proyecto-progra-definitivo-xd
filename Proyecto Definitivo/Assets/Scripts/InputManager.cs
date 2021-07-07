@@ -39,4 +39,8 @@ public class InputManager : MonoBehaviour
         return playerControls.Player.Jump.triggered;
 
     }
+    public bool PlayerAttackedThisFrame()
+    {
+        return playerControls.Player.Fire.triggered;
+    }
 }

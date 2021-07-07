@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
         mainCamera = Camera.main;
         cameraTransform = mainCamera.transform;
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = true;
         SetActiveImages(false, ResourceType.All);
         inputManager = InputManager.Instance;
         controller = GetComponent<CharacterController>();
@@ -81,37 +82,7 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 80f, rayLayer))
         {
             bool inRange = false;
-            bool inAttackRange = false;
             GameObject other = hit.collider.gameObject;
-            if (other.CompareTag("Enemy"))
-            {
-                foreach (var item in Physics.OverlapSphere(transform.position, attackRange, attackLayer))
-                {
-                    if (other.Equals(item.gameObject))
-                    {
-                        inAttackRange = true;
-                        break;
-                    }
-                    inAttackRange = false;
-                }
-                if (inAttackRange)
-                {
-                    toolImage.sprite = toolSprites[3];
-                    toolImage.gameObject.SetActive(true);
-                    if (Mouse.current.leftButton.wasPressedThisFrame)
-                    {
-                        other.GetComponent<EnemyScript>().GetDamage(damage);
-                    }
-                }
-                else
-                {
-                    toolImage.gameObject.SetActive(false);
-                }
-            }
-            else
-            {
-                toolImage.gameObject.SetActive(false);
-            }
             if (other.CompareTag("Recolectable"))
             {
                 foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, collectLayer))
@@ -159,7 +130,13 @@ public class PlayerController : MonoBehaviour
             SetActiveImages(false, ResourceType.All);
             StopCoroutine("Collect");
         }
-        #endregion
+        #endregion COLLECT
+        #region ATTACK
+        if (inputManager.PlayerAttackedThisFrame())
+        {
+            //Physics.BoxCastAll(transform.position, new Vector3);
+        }
+        #endregion ATTACK
     }
     IEnumerator Collect(GameObject collectable)
     {
