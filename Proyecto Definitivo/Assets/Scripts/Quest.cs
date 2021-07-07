@@ -1,16 +1,28 @@
+using UnityEngine;
+[System.Serializable]
 public class Quest
 {
     private static int currentId;
-    public int Id { get; set; }
-    public string Description { get; set; }
-    public string Objective { get; set; }
-    public QuestType Type {get; set;}
-    public Quest(string desc, string objt, QuestType type)
+    public int id;
+    public string description;
+    public string objective;
+    public QuestType type;
+    public GameObject target;
+    public Quest(string desc, string objt, QuestType typex)
     {
-        Id = currentId++;
-        Description = desc;
-        Objective = objt;
-        Type = type;
+        id = currentId++;
+        description = desc;
+        objective = objt;
+        type = typex;
+        target = null;
+    }
+    public Quest(string desc, string objt, QuestType typex, GameObject targ)
+    {
+        id = currentId++;
+        description = desc;
+        objective = objt;
+        type = typex;
+        target = targ;
     }
 }
 
