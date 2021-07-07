@@ -114,37 +114,23 @@ public class PlayerController : MonoBehaviour
                     }
                     if (Keyboard.current.eKey.wasReleasedThisFrame)
                     {
-                        farmingImage.fillAmount = 0;
-                        SetActiveImages(false, ResourceType.All);
-                        StopCoroutine("Collect");
-                        Axe.GetComponent<Animation>().Stop();
-                        Axe.transform.localRotation = startRotation;
+                        OnCollectionStop();
                     }
                 }
                 else
                 {
-                    farmingImage.fillAmount = 0;
-                    SetActiveImages(false, ResourceType.All);
-                    StopCoroutine("Collect");
-                    Axe.GetComponent<Animation>().Stop();
-                    Axe.transform.localRotation = startRotation;
+                    OnCollectionStop();
                 }
             }
             else
             {
-                farmingImage.fillAmount = 0;
-                SetActiveImages(false, ResourceType.All);
-                StopCoroutine("Collect");
-                Axe.GetComponent<Animation>().Stop();
-                Axe.transform.localRotation = startRotation;
+                OnCollectionStop();
             }
 
         }
         else
         {
-            farmingImage.fillAmount = 0;
-            SetActiveImages(false, ResourceType.All);
-            StopCoroutine("Collect");
+            OnCollectionStop();
         }
         #endregion COLLECT
         #region ATTACK
@@ -154,12 +140,20 @@ public class PlayerController : MonoBehaviour
             {
                 item.GetComponent<EnemyScript>().GetDamage(damage);
             }
-            
-
             StartCoroutine(CooldownCorroutine(5));
         }
         #endregion ATTACK
     }
+
+    private void OnCollectionStop()
+    {
+        farmingImage.fillAmount = 0;
+        SetActiveImages(false, ResourceType.All);
+        StopCoroutine("Collect");
+        Axe.GetComponent<Animation>().Stop();
+        Axe.transform.localRotation = startRotation;
+    }
+
     IEnumerator Collect(GameObject collectable)
     {
         Collectable c = collectable.GetComponent<Collectable>();
