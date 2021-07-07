@@ -229,7 +229,6 @@ public class PlayerController : MonoBehaviour
             left = quantity - xpToNextLevel;
             xp = 0;
             LevelUp();
-            Debug.Log($"xp {xp} left {left}");
             AddXP(left);
         }
         else xp += quantity;
