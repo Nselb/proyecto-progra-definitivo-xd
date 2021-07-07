@@ -9,6 +9,7 @@ TagManager:
   - Animal
   - Enemy
   - ArenaIn
+  - PlaceInfo
   layers:
   - Default
   - TransparentFX
