@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     private Image life;
     private InputManager inputManager;
     private Transform cameraTransform;
+    private bool cooldown = true;
     #endregion PRIVADAS
 
     private void Start()
@@ -135,12 +136,13 @@ public class PlayerController : MonoBehaviour
         }
         #endregion COLLECT
         #region ATTACK
-        if (inputManager.PlayerAttackedThisFrame() && Cooldown(1) )
+        if (inputManager.PlayerAttackedThisFrame() && cooldown)
         {
             foreach (var item in AttackCone())
             {
                 item.GetComponent<EnemyScript>().GetDamage(damage);
             }
+            StartCoroutine(CooldownCorroutine(5));
         }
         #endregion ATTACK
     }
@@ -260,14 +262,12 @@ public class PlayerController : MonoBehaviour
         }
         return objects.ToArray();
     }
-    bool Cooldown(float duration, float start = 0f)
+    IEnumerator CooldownCorroutine(float duration)
     {
-        if (Time.time > start + duration)
-        {
-            start = Time.time;
-            return true;
-        }
-        return false;
+        Debug.Log("a");
+        cooldown = false;
+        yield return new WaitForSeconds(duration);
+        cooldown = true;
     }
     public void OnTriggerEnter(Collider other)
     {
@@ -278,7 +278,7 @@ public class PlayerController : MonoBehaviour
         if(other.CompareTag("PlaceInfo"))
         {
             var place = Instantiate(placename);
-            place.transform.parent = ui.transform;
+            place.transform.SetParent(ui.transform);
             place.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 350);
             place.GetComponent<TextMeshProUGUI>().text = other.name;
             Destroy(place, 4);
