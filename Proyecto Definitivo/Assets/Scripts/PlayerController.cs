@@ -12,11 +12,12 @@ public class PlayerController : MonoBehaviour
     public float vida = 100f;
     public float comida = 100f;
     public float damage;
-    public float xp = 0f;
-    public int level;
+    public int xp = 0;
+    [SerializeField]
+    private int xpToNextLevel = 1000;
+    public int level = 1;
     public float carga;
     private float attackRange;
-
     [Header("Player Physics")]
     public float speed = 10f;
     public float jumpHeight = 3f;
@@ -24,7 +25,6 @@ public class PlayerController : MonoBehaviour
     public float collectDistance = 5f;
     public LayerMask interactionLayer;
     public LayerMask attackLayer;
-
     [Header("Recollection")]
     public GameObject collectInfo;
     public Image farmingImage;
@@ -32,11 +32,10 @@ public class PlayerController : MonoBehaviour
     public Sprite[] toolSprites;
     public Sprite[] resourceSprites;
     public Transform Arenaout;
-
     public GameObject placename;
     public GameObject pickaxe;
     public GameObject hacha;
-    public bool Swinging = false;
+
     #endregion PUBLICAS
     #region PRIVADAS
     private Camera mainCamera;
@@ -161,6 +160,37 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+            if (other.CompareTag("TalkTarget"))
+            {
+                foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, interactionLayer))
+                {
+                    if (other.Equals(item.gameObject))
+                    {
+                        near = true;
+                        break;
+                    }
+                    near = false;
+                }
+                if (near)
+                {
+                    bool target = false;
+                    Quest questToCheck = null;
+                    foreach (var quest in questManager.quests)
+                    {
+                        if (quest.GetTarget().Equals(other))
+                        {
+                            target = true;
+                            questToCheck = quest;
+                            break;
+                        }
+                        target = false;
+                    }
+                    if (Keyboard.current.eKey.wasPressedThisFrame && target)
+                    {
+                        questManager.CompleteQuest(questToCheck);
+                    }
+                }
+            }
 
         }
         else
@@ -189,6 +219,26 @@ public class PlayerController : MonoBehaviour
         pickaxe.transform.localRotation = startRotation;
         hacha.GetComponent<Animation>().Stop();
         hacha.transform.localRotation = hstartRotation;
+    }
+
+    public void AddXP(int quantity)
+    {
+        int left = 0;
+        if (xp + quantity >= xpToNextLevel)
+        {
+            left = quantity - xpToNextLevel;
+            xp = 0;
+            LevelUp();
+            Debug.Log($"xp {xp} left {left}");
+            AddXP(left);
+        }
+        else xp += quantity;
+    }
+
+    private void LevelUp()
+    {
+        level++;
+        xpToNextLevel += 1000 + (50 * level);
     }
 
     IEnumerator Collect(GameObject collectable)
