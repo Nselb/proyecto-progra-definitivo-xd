@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     public Transform Arenaout;
 
     public GameObject placename;
-    public GameObject Axe;
+    public GameObject pickaxe;
     public GameObject hacha;
     public bool Swinging = false;
     #endregion PUBLICAS
@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
         farmingImage.fillAmount = 0;
         toolImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
         farmingImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
-        startRotation = Axe.transform.localRotation;
+        startRotation = pickaxe.transform.localRotation;
         hstartRotation = hacha.transform.localRotation;
         questManager = QuestManager.Instance;
     }
@@ -115,8 +115,18 @@ public class PlayerController : MonoBehaviour
                     {
                         farmingImage.fillAmount = 0;
                         StartCoroutine("Collect", hit.collider.gameObject);
-                        Axe.GetComponent<Animation>().Play();
-                        hacha.GetComponent<Animation>().Play();
+                        ResourceType type = hit.collider.gameObject.GetComponent<Collectable>().type;
+                        switch (type)
+                        {
+                            case ResourceType.Metal:
+                            case ResourceType.Rock:
+                                pickaxe.GetComponent<Animation>().Play();
+                                break;
+                            case ResourceType.Wood:
+                                hacha.GetComponent<Animation>().Play();
+                                break;
+                        }
+
                     }
                     if (Keyboard.current.eKey.wasReleasedThisFrame)
                     {
@@ -175,8 +185,8 @@ public class PlayerController : MonoBehaviour
         farmingImage.fillAmount = 0;
         SetActiveImages(false, ResourceType.All);
         StopCoroutine("Collect");
-        Axe.GetComponent<Animation>().Stop();
-        Axe.transform.localRotation = startRotation;
+        pickaxe.GetComponent<Animation>().Stop();
+        pickaxe.transform.localRotation = startRotation;
         hacha.GetComponent<Animation>().Stop();
         hacha.transform.localRotation = hstartRotation;
     }
@@ -309,7 +319,7 @@ public class PlayerController : MonoBehaviour
         {
             transform.position = Arenaout.transform.position;
         }
-        if(other.CompareTag("PlaceInfo"))
+        if (other.CompareTag("PlaceInfo"))
         {
             var place = Instantiate(placename);
             place.transform.SetParent(ui.transform);
