@@ -10,6 +10,7 @@ TagManager:
   - Enemy
   - ArenaIn
   - PlaceInfo
+  - Quester
   layers:
   - Default
   - TransparentFX

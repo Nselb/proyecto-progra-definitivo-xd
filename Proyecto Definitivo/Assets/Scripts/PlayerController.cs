@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
     private InputManager inputManager;
     private Transform cameraTransform;
     private bool cooldown = true;
+    private bool near;
     private Quaternion startRotation;
     #endregion PRIVADAS
 
@@ -132,14 +133,14 @@ public class PlayerController : MonoBehaviour
                 {
                     if (other.Equals(item.gameObject))
                     {
-                        inRange = true;
+                        near = true;
                         break;
                     }
-                    inRange = false;
+                    near = false;
                 }
-                if (inRange)
+                if (near)
                 {
-                    other.GetComponent<Quester>().GetQuest();
+                    Debug.Log(other.GetComponent<Quester>().GetQuest());
                 }
             }
 
