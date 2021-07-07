@@ -11,6 +11,7 @@ TagManager:
   - ArenaIn
   - PlaceInfo
   - Quester
+  - TalkTarget
   layers:
   - Default
   - TransparentFX
