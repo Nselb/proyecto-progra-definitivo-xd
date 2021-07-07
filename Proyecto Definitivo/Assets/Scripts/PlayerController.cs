@@ -31,6 +31,8 @@ public class PlayerController : MonoBehaviour
     public Sprite[] toolSprites;
     public Sprite[] resourceSprites;
     public Transform Arenaout;
+
+    public GameObject placename;
     #endregion PUBLICAS
     #region PRIVADAS
     private Camera mainCamera;
@@ -246,6 +248,15 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("ArenaIn"))
         {
             transform.position = Arenaout.transform.position;
+        }
+        if(other.CompareTag("PlaceInfo"))
+        {
+            var place = Instantiate(placename);
+            place.transform.parent = ui.transform;
+            place.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 350);
+            place.GetComponent<TextMeshProUGUI>().text = other.name;
+            Destroy(place, 4);
+
         }
     }
     public void Die()
