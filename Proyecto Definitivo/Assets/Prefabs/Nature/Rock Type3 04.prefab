@@ -97,6 +97,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeToRespawnInDays: 5
   resource: {fileID: 100000, guid: 9610e9f82c2a94923b599b88400f3bb6, type: 3}
+  floorLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!65 &-2086384407606418291
 BoxCollider:
   m_ObjectHideFlags: 0
