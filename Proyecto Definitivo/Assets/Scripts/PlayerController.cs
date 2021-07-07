@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     private bool cooldown = true;
     private bool near;
     private Quaternion startRotation;
+    private QuestManager questManager;
     #endregion PRIVADAS
 
     private void Start()
@@ -66,6 +67,7 @@ public class PlayerController : MonoBehaviour
         toolImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
         farmingImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
         startRotation = Axe.transform.localRotation;
+        questManager = QuestManager.Instance;
     }
 
     public void Update()
@@ -140,7 +142,10 @@ public class PlayerController : MonoBehaviour
                 }
                 if (near)
                 {
-                    Debug.Log(other.GetComponent<Quester>().GetQuest());
+                    if (Keyboard.current.eKey.wasPressedThisFrame)
+                    {
+                        questManager.AddQuest(other.GetComponent<Quester>().GetQuest());
+                    }
                 }
             }
 

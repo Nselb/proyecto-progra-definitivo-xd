@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class QuestManager : MonoBehaviour
 {
-    private QuestManager manager;
+    private static QuestManager manager;
     public List<Quest> Quests { get; set; }
     public List<Quest> Completed { get; set;}
-    public QuestManager Manage 
+    public static QuestManager Instance 
     {
         get { return manager; }
     }
