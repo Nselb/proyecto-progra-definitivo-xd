@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
@@ -132,9 +133,12 @@ public class PlayerController : MonoBehaviour
         }
         #endregion COLLECT
         #region ATTACK
-        if (inputManager.PlayerAttackedThisFrame())
+        if (inputManager.PlayerAttackedThisFrame() && Cooldown(1) )
         {
-            //Physics.BoxCastAll(transform.position, new Vector3);
+            foreach (var item in AttackCone())
+            {
+                item.GetComponent<EnemyScript>().GetDamage(damage);
+            }
         }
         #endregion ATTACK
     }
@@ -240,6 +244,28 @@ public class PlayerController : MonoBehaviour
         {
             Die();
         }
+    }
+    GameObject[] AttackCone()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position + Vector3.up * 1f, 5f, attackLayer);
+        List<GameObject> objects = new List<GameObject>();
+        foreach (Collider collider in colliders)
+        {
+            if (Vector3.Angle(cameraTransform.forward, collider.transform.position - transform.position) < 45)
+            {
+                objects.Add(collider.gameObject);
+            }
+        }
+        return objects.ToArray();
+    }
+    bool Cooldown(float duration, float start = 0f)
+    {
+        if (Time.time > start + duration)
+        {
+            start = Time.time;
+            return false;
+        }
+        return true;
     }
     public void OnTriggerEnter(Collider other)
     {
