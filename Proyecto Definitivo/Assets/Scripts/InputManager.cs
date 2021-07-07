@@ -11,9 +11,9 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null && instance != this) Destroy(this.gameObject);
-        else instance = this;
         playerControls = new PlayerInput();
+        if (instance != null && instance != this) Destroy(this);
+        else instance = this;
     }
 
     private void OnEnable()
