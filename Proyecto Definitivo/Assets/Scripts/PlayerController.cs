@@ -264,7 +264,6 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator CooldownCorroutine(float duration)
     {
-        Debug.Log("a");
         cooldown = false;
         yield return new WaitForSeconds(duration);
         cooldown = true;
