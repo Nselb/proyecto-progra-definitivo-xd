@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour
     public Transform Arenaout;
 
     public GameObject placename;
+    public GameObject Axe;
+    public bool Swinging = false;
     #endregion PUBLICAS
     #region PRIVADAS
     private Camera mainCamera;
@@ -44,6 +46,7 @@ public class PlayerController : MonoBehaviour
     private InputManager inputManager;
     private Transform cameraTransform;
     private bool cooldown = true;
+    private Quaternion startRotation;
     #endregion PRIVADAS
 
     private void Start()
@@ -61,6 +64,7 @@ public class PlayerController : MonoBehaviour
         farmingImage.fillAmount = 0;
         toolImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
         farmingImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
+        startRotation = Axe.transform.localRotation;
     }
 
     public void Update()
@@ -105,12 +109,16 @@ public class PlayerController : MonoBehaviour
                     {
                         farmingImage.fillAmount = 0;
                         StartCoroutine("Collect", hit.collider.gameObject);
+                        Axe.GetComponent<Animation>().Play();
+
                     }
                     if (Keyboard.current.eKey.wasReleasedThisFrame)
                     {
                         farmingImage.fillAmount = 0;
                         SetActiveImages(false, ResourceType.All);
                         StopCoroutine("Collect");
+                        Axe.GetComponent<Animation>().Stop();
+                        Axe.transform.localRotation = startRotation;
                     }
                 }
                 else
@@ -118,6 +126,8 @@ public class PlayerController : MonoBehaviour
                     farmingImage.fillAmount = 0;
                     SetActiveImages(false, ResourceType.All);
                     StopCoroutine("Collect");
+                    Axe.GetComponent<Animation>().Stop();
+                    Axe.transform.localRotation = startRotation;
                 }
             }
             else
@@ -125,6 +135,8 @@ public class PlayerController : MonoBehaviour
                 farmingImage.fillAmount = 0;
                 SetActiveImages(false, ResourceType.All);
                 StopCoroutine("Collect");
+                Axe.GetComponent<Animation>().Stop();
+                Axe.transform.localRotation = startRotation;
             }
 
         }
@@ -142,6 +154,8 @@ public class PlayerController : MonoBehaviour
             {
                 item.GetComponent<EnemyScript>().GetDamage(damage);
             }
+            
+
             StartCoroutine(CooldownCorroutine(5));
         }
         #endregion ATTACK
