@@ -265,9 +265,9 @@ public class PlayerController : MonoBehaviour
         if (Time.time > start + duration)
         {
             start = Time.time;
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
     public void OnTriggerEnter(Collider other)
     {
