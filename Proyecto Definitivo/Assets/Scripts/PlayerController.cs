@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     public float jumpHeight = 3f;
     public float gravity = -9.81f;
     public float collectDistance = 5f;
-    public LayerMask collectLayer;
+    public LayerMask interactionLayer;
     public LayerMask attackLayer;
 
     [Header("Recollection")]
@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
             GameObject other = hit.collider.gameObject;
             if (other.CompareTag("Recolectable"))
             {
-                foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, collectLayer))
+                foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, interactionLayer))
                 {
                     if (other.Equals(item.gameObject))
                     {
@@ -125,6 +125,22 @@ public class PlayerController : MonoBehaviour
             else
             {
                 OnCollectionStop();
+            }
+            if (other.CompareTag("Quester"))
+            {
+                foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, interactionLayer))
+                {
+                    if (other.Equals(item.gameObject))
+                    {
+                        inRange = true;
+                        break;
+                    }
+                    inRange = false;
+                }
+                if (inRange)
+                {
+                    other.GetComponent<Quester>().GetQuest();
+                }
             }
 
         }
