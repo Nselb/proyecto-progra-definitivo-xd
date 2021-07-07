@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
 
     public GameObject placename;
     public GameObject Axe;
+    public GameObject hacha;
     public bool Swinging = false;
     #endregion PUBLICAS
     #region PRIVADAS
@@ -113,7 +114,7 @@ public class PlayerController : MonoBehaviour
                         farmingImage.fillAmount = 0;
                         StartCoroutine("Collect", hit.collider.gameObject);
                         Axe.GetComponent<Animation>().Play();
-
+                        //hacha.GetComponent<Animation>().Play();
                     }
                     if (Keyboard.current.eKey.wasReleasedThisFrame)
                     {
@@ -174,6 +175,8 @@ public class PlayerController : MonoBehaviour
         StopCoroutine("Collect");
         Axe.GetComponent<Animation>().Stop();
         Axe.transform.localRotation = startRotation;
+        //hacha.GetComponent<Animation>().Stop();
+        //hacha.transform.localRotation = startRotation;
     }
 
     IEnumerator Collect(GameObject collectable)
