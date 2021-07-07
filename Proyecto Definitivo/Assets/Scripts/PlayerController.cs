@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour
     private bool cooldown = true;
     private bool near;
     private Quaternion startRotation;
+    private Quaternion hstartRotation;
     private QuestManager questManager;
     #endregion PRIVADAS
 
@@ -68,6 +69,7 @@ public class PlayerController : MonoBehaviour
         toolImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
         farmingImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
         startRotation = Axe.transform.localRotation;
+        hstartRotation = hacha.transform.localRotation;
         questManager = QuestManager.Instance;
     }
 
@@ -114,7 +116,7 @@ public class PlayerController : MonoBehaviour
                         farmingImage.fillAmount = 0;
                         StartCoroutine("Collect", hit.collider.gameObject);
                         Axe.GetComponent<Animation>().Play();
-                        //hacha.GetComponent<Animation>().Play();
+                        hacha.GetComponent<Animation>().Play();
                     }
                     if (Keyboard.current.eKey.wasReleasedThisFrame)
                     {
@@ -175,8 +177,8 @@ public class PlayerController : MonoBehaviour
         StopCoroutine("Collect");
         Axe.GetComponent<Animation>().Stop();
         Axe.transform.localRotation = startRotation;
-        //hacha.GetComponent<Animation>().Stop();
-        //hacha.transform.localRotation = startRotation;
+        hacha.GetComponent<Animation>().Stop();
+        hacha.transform.localRotation = hstartRotation;
     }
 
     IEnumerator Collect(GameObject collectable)
