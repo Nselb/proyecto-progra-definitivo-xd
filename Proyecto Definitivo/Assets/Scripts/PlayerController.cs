@@ -62,6 +62,8 @@ public class PlayerController : MonoBehaviour
     private QuestManager questManager;
     private GameObject equipado;
     private GameObject missionsUI;
+    private int wood;
+    private int stone;
 
     #endregion PRIVADAS
     private void Start()
@@ -375,6 +377,8 @@ public class PlayerController : MonoBehaviour
             }
             c.vida--;
             farmingImage.fillAmount = 0;
+            wood += c.dropQuantity;
+
             StartCoroutine("ShowInfoText", c);
         }
         c.Die();
