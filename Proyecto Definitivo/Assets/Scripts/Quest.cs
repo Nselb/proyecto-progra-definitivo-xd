@@ -2,14 +2,23 @@ using UnityEngine;
 [System.Serializable]
 public class Quest
 {
+    
     private static int currentId = 0;
+    [SerializeField]
     private int id;
+    [SerializeField]
     private string description;
+    [SerializeField]
     private string objective;
+    [SerializeField]
     private QuestType type;
+    [SerializeField]
     private GameObject target;
+    [SerializeField]
     private int itemId;
+    [SerializeField]
     private int itemQuantity;
+    [SerializeField]
     private int xp;
 
     public Quest(string desc, string objt, QuestType typex, int xp)
@@ -78,5 +87,5 @@ public class Quest
 
 public enum QuestType
 {
-    Talk, Gather
+    Talk, Gather, Kill
 }

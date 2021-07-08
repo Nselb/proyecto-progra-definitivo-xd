@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -177,12 +178,13 @@ public class PlayerController : MonoBehaviour
                     {
                         Quest quest = other.GetComponent<Quester>().GetQuest();
                         questAcceptUi.transform.GetChild(2).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
-                        $"Descripcion:\n{quest.GetDescription()}\n\nObjetivo:\n{quest.GetObjective()}";
+                        $"Descripcion:\n{quest.GetDescription()}\n\nObjetivo:\n{quest.GetObjective()}\nRecompensas:\n{string.Format("{0,15:N0} xp", quest.GetXp())}";
                         speed = 0;
                         Cursor.lockState = CursorLockMode.Confined;
                         CinemachinePOVExtension.verticalSpeed = 0;
                         CinemachinePOVExtension.horizontalSpeed = 0;
                         questAcceptUi.SetActive(true);
+                        questAcceptUi.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(delegate { OnAcceptQuest(quest, other.GetComponent<Quester>()); });
                     }
                 }
             }
@@ -255,6 +257,19 @@ public class PlayerController : MonoBehaviour
             //arco.SetActive(false);
         }
         #endregion EQUIP
+    }
+    public void OnAcceptQuest(Quest quest, Quester giver)
+    {
+        speed = PLAYER_SPEED;
+        Cursor.lockState = CursorLockMode.Locked;
+        CinemachinePOVExtension.verticalSpeed = 10;
+        CinemachinePOVExtension.horizontalSpeed = 10;
+        questAcceptUi.SetActive(false);
+        questManager.AddQuest(quest);
+        if (quest.GetQuestType() == QuestType.Talk)
+        {
+            Destroy(giver);
+        }
     }
     public void OnDeclineQuest()
     {
@@ -440,19 +455,26 @@ public class PlayerController : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("ArenaIn"))
+        switch (other.tag)
         {
-            transform.position = Arenaout.transform.position;
-        }
-        if (other.CompareTag("PlaceInfo"))
-        {
-            var place = Instantiate(placename);
-            place.transform.SetParent(ui.transform);
-            place.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 350);
-            place.GetComponent<TextMeshProUGUI>().text = other.name;
-            Destroy(place, 4);
+            case "ArenaIn":
+                transform.position = Arenaout.transform.position;
+                break;
+            case "PlaceInfo":
+                {
+                    var place = Instantiate(placename);
+                    place.transform.SetParent(ui.transform);
+                    place.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 350);
+                    place.GetComponent<TextMeshProUGUI>().text = other.name;
+                    Destroy(place, 4);
+                    break;
+                }
+            case "TpToDungeon":
+                SceneManager.LoadScene("Dungeon");
+                break;
 
         }
+
     }
     public void Die()
     {

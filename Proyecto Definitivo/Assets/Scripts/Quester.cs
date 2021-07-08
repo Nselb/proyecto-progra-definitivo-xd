@@ -8,7 +8,7 @@ public class Quester : MonoBehaviour
     public QuestType type;
     public int xp;
     [Space]
-    [Header("Talk type")]
+    [Header("Talk/Kill type")]
     public GameObject target;
     [Space]
     [Header("Gather type")]
