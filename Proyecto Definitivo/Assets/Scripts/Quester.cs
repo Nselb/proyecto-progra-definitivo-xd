@@ -23,6 +23,7 @@ public class Quester : MonoBehaviour
     {
         if (target != null) quest = new Quest(description, objective, type, xp, target, goal, goalQuantity);
         else if (itemId != -1) quest = new Quest(description, objective, type, xp, itemId, goalQuantity, goal);
+        else if (type == QuestType.Kill) quest = new Quest(description, objective, type, xp, target, goal, goalQuantity);
         else quest = new Quest(description, objective, type, xp, goal);
     }
     public Quest GetQuest()
