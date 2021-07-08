@@ -3,10 +3,8 @@ using Cinemachine;
 
 public class CinemachinePOVExtension : CinemachineExtension
 {
-    [SerializeField]
-    private float horizontalSpeed = 10f;
-    [SerializeField]
-    private float verticalSpeed = 10f;
+    public static float horizontalSpeed = 10f;
+    public static float verticalSpeed = 10f;
     [SerializeField]
     private float clampAngle = 80f;
     private InputManager inputManager;

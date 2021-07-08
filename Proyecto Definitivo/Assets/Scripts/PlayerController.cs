@@ -4,9 +4,11 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+    private const float PLAYER_SPEED = 10f;
     #region PUBLICAS
     [Header("Player Stats")]
     public float vida = 100f;
@@ -22,7 +24,7 @@ public class PlayerController : MonoBehaviour
     public GameObject espada;
     public GameObject arco;
     [Header("Player Physics")]
-    public float speed = 10f;
+    public float speed = PLAYER_SPEED;
     public float jumpHeight = 3f;
     public float gravity = -9.81f;
     public float collectDistance = 5f;
@@ -36,6 +38,11 @@ public class PlayerController : MonoBehaviour
     public Sprite[] resourceSprites;
     public Transform Arenaout;
     public GameObject placename;
+    public AudioSource walkAudio;
+    public AudioSource weaponAudio;
+    public AudioClip swordswing;
+    public AudioClip walkgrass;
+
     #endregion PUBLICAS
 
     #region PRIVADAS
@@ -43,6 +50,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private Vector3 playerVelocity;
     private GameObject ui;
+    private GameObject questAcceptUi;
     private Image life;
     private InputManager inputManager;
     private Transform cameraTransform;
@@ -52,8 +60,9 @@ public class PlayerController : MonoBehaviour
     private Quaternion hstartRotation;
     private QuestManager questManager;
     private GameObject equipado;
-    #endregion PRIVADAS
+    private GameObject missionsUI;
 
+    #endregion PRIVADAS
     private void Start()
     {
         mainCamera = Camera.main;
@@ -65,6 +74,8 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         ui = GameObject.Find("UI");
         life = ui.transform.GetChild(2).GetComponent<Image>();
+        missionsUI = GameObject.Find("MissionsUI");
+        questAcceptUi = missionsUI.transform.GetChild(0).gameObject;
         life.color = new Color(160 / 255f, 255 / 255f, 75 / 255f);
         farmingImage.fillAmount = 0;
         toolImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
@@ -76,6 +87,7 @@ public class PlayerController : MonoBehaviour
         pickaxe.SetActive(false);
         espada.SetActive(false);
         //arco.SetActive(false);
+
     }
 
     public void Update()
@@ -85,10 +97,23 @@ public class PlayerController : MonoBehaviour
         {
             playerVelocity.y = 0f;
         }
+        if (playerVelocity.y > 0)
+        {
+            walkAudio.Stop();
+        }
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         Vector3 move = new Vector3(inputManager.GetPlayerMovement().x, 0f, inputManager.GetPlayerMovement().y);
         move = cameraTransform.forward * move.z + cameraTransform.right * move.x;
         move.y = 0;
+        if (move != Vector3.zero)
+        {
+            walkAudio.clip = walkgrass;
+            if (!walkAudio.isPlaying)
+            {
+                walkAudio.Play();
+            }
+        }
+        else walkAudio.Stop();
         controller.Move(move * speed * Time.deltaTime);
         playerVelocity.y += gravity * Time.deltaTime;
         if (inputManager.PlayerJumpedThisFrame() && isGrounded)
@@ -96,7 +121,7 @@ public class PlayerController : MonoBehaviour
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
         }
         controller.Move(playerVelocity * Time.deltaTime);
-        #region COLLECT
+        #region COLLECT AND INTERACT
         int rayLayer = ~(1 << 8);
         if (Physics.Raycast(ray, out RaycastHit hit, 80f, rayLayer))
         {
@@ -104,15 +129,7 @@ public class PlayerController : MonoBehaviour
             GameObject other = hit.collider.gameObject;
             if (other.CompareTag("Recolectable"))
             {
-                foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, interactionLayer))
-                {
-                    if (other.Equals(item.gameObject))
-                    {
-                        inRange = true;
-                        break;
-                    }
-                    inRange = false;
-                }
+                inRange = CheckIfNear(other);
                 if (inRange)
                 {
                     SetActiveImages(true, other.GetComponent<Collectable>().type);
@@ -142,48 +159,40 @@ public class PlayerController : MonoBehaviour
                     }
                     if (Keyboard.current.eKey.wasReleasedThisFrame)
                     {
-                        OnCollectionStop();
+                        StopCollecting();
                     }
                 }
                 else
                 {
-                    OnCollectionStop();
+                    StopCollecting();
                 }
             }
             else
             {
-                OnCollectionStop();
+                StopCollecting();
             }
             if (other.CompareTag("Quester"))
             {
-                foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, interactionLayer))
-                {
-                    if (other.Equals(item.gameObject))
-                    {
-                        near = true;
-                        break;
-                    }
-                    near = false;
-                }
+                near = CheckIfNear(other);
                 if (near)
                 {
                     if (Keyboard.current.eKey.wasPressedThisFrame)
                     {
-                        questManager.AddQuest(other.GetComponent<Quester>().GetQuest());
+                        Quest quest = other.GetComponent<Quester>().GetQuest();
+                        questAcceptUi.transform.GetChild(2).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                        $"Descripcion:\n{quest.GetDescription()}\n\nObjetivo:\n{quest.GetObjective()}\nRecompensas:\n{string.Format("{0,15:N0} xp", quest.GetXp())}";
+                        speed = 0;
+                        Cursor.lockState = CursorLockMode.Confined;
+                        CinemachinePOVExtension.verticalSpeed = 0;
+                        CinemachinePOVExtension.horizontalSpeed = 0;
+                        questAcceptUi.SetActive(true);
+                        questAcceptUi.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(delegate { OnAcceptQuest(quest, other.GetComponent<Quester>()); });
                     }
                 }
             }
             if (other.CompareTag("TalkTarget"))
             {
-                foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, interactionLayer))
-                {
-                    if (other.Equals(item.gameObject))
-                    {
-                        near = true;
-                        break;
-                    }
-                    near = false;
-                }
+                near = CheckIfNear(other);
                 if (near)
                 {
                     bool target = false;
@@ -204,23 +213,24 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-
         }
         else
         {
-            OnCollectionStop();
+            StopCollecting();
         }
         #endregion COLLECT
+
         #region ATTACK
-        if (inputManager.PlayerAttackedThisFrame() && cooldown && equipado.Equals(espada))
+        if (inputManager.PlayerAttackedThisFrame() && cooldown && equipado != null && equipado.Equals(espada))
         {
             foreach (var item in AttackCone())
             {
                 item.GetComponent<EnemyScript>().GetDamage(damage);
             }
             espada.GetComponent<Animation>().Play();
+            PlaySwordAttack();
             StartCoroutine(CooldownCorroutine(espada.GetComponent<Animation>().GetClip("Sword").length));
-        } 
+        }
         #endregion ATTACK
 
         #region EQUIP
@@ -250,8 +260,55 @@ public class PlayerController : MonoBehaviour
         }
         #endregion EQUIP
     }
+    public void OnAcceptQuest(Quest quest, Quester giver)
+    {
+        speed = PLAYER_SPEED;
+        Cursor.lockState = CursorLockMode.Locked;
+        CinemachinePOVExtension.verticalSpeed = 10;
+        CinemachinePOVExtension.horizontalSpeed = 10;
+        questAcceptUi.SetActive(false);
+        questManager.AddQuest(quest);
+        AddQuestUI(quest);
+        if (quest.GetQuestType() == QuestType.Talk)
+        {
+            Destroy(giver);
+        }
+    }
+    public void OnDeclineQuest()
+    {
+        speed = PLAYER_SPEED;
+        Cursor.lockState = CursorLockMode.Locked;
+        CinemachinePOVExtension.verticalSpeed = 10;
+        CinemachinePOVExtension.horizontalSpeed = 10;
+        questAcceptUi.SetActive(false);
+    }
+    public void PlaySwordAttack()
+    {
+        weaponAudio.clip = swordswing;
+        weaponAudio.Play();
+    }
+    private bool CheckIfNear(GameObject other)
+    {
+        bool inRange = false;
+        foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, interactionLayer))
+        {
+            if (other.Equals(item.gameObject))
+            {
+                inRange = true;
+                break;
+            }
+            inRange = false;
+        }
 
-    private void OnCollectionStop()
+        return inRange;
+    }
+
+    private void AddQuestUI(Quest quest)
+    {
+        missionsUI.transform.GetChild(1).transform.GetChild(1).GetComponent<TextMeshProUGUI>().text += "- "+quest.GetGoal() + " 0/" +quest.GetGoalQuantity(); 
+    }
+
+    private void StopCollecting()
     {
         farmingImage.fillAmount = 0;
         SetActiveImages(false, ResourceType.All);
@@ -406,19 +463,26 @@ public class PlayerController : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("ArenaIn"))
+        switch (other.tag)
         {
-            transform.position = Arenaout.transform.position;
-        }
-        if (other.CompareTag("PlaceInfo"))
-        {
-            var place = Instantiate(placename);
-            place.transform.SetParent(ui.transform);
-            place.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 350);
-            place.GetComponent<TextMeshProUGUI>().text = other.name;
-            Destroy(place, 4);
+            case "ArenaIn":
+                transform.position = Arenaout.transform.position;
+                break;
+            case "PlaceInfo":
+                {
+                    var place = Instantiate(placename);
+                    place.transform.SetParent(ui.transform);
+                    place.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 350);
+                    place.GetComponent<TextMeshProUGUI>().text = other.name;
+                    Destroy(place, 4);
+                    break;
+                }
+            case "TpToDungeon":
+                SceneManager.LoadScene("Dungeon");
+                break;
 
         }
+
     }
     public void Die()
     {

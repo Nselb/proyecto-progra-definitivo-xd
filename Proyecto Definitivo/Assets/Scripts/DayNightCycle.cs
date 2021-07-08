@@ -11,6 +11,8 @@ public class DayNightCycle : MonoBehaviour
     public float startTime = 0.2f;
     private float timeRate;
     public Vector3 noon;
+    public float rotationSpeed;
+    public AnimationCurve skyboxExposure;
 
     [Header("Sun Settings")]
     public Light sun;
@@ -44,6 +46,8 @@ public class DayNightCycle : MonoBehaviour
         moon.transform.eulerAngles = (time - 0.75f) * noon * 4f;
         sun.intensity = sunIntensity.Evaluate(time);
         moon.intensity = moonIntensity.Evaluate(time);
+        RenderSettings.skybox.SetFloat("_Rotation", time * rotationSpeed);
+        RenderSettings.skybox.SetFloat("_Exposure", skyboxExposure.Evaluate(time));
         if (sun.intensity == 0 && sun.gameObject.activeInHierarchy) sun.gameObject.SetActive(false);
         else if (sun.intensity > 0 && !sun.gameObject.activeInHierarchy) sun.gameObject.SetActive(true);
         if (moon.intensity == 0 && moon.gameObject.activeInHierarchy) moon.gameObject.SetActive(false);

@@ -12,6 +12,7 @@ TagManager:
   - PlaceInfo
   - Quester
   - TalkTarget
+  - TpToDungeon
   layers:
   - Default
   - TransparentFX
