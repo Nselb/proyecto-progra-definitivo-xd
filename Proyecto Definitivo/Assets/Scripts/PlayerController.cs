@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
     private Quaternion hstartRotation;
     private QuestManager questManager;
     private GameObject equipado;
+    private GameObject missionsUI;
 
     #endregion PRIVADAS
     private void Start()
@@ -73,7 +74,8 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         ui = GameObject.Find("UI");
         life = ui.transform.GetChild(2).GetComponent<Image>();
-        questAcceptUi = ui.transform.GetChild(6).gameObject;
+        missionsUI = GameObject.Find("MissionsUI");
+        questAcceptUi = missionsUI.transform.GetChild(0).gameObject;
         life.color = new Color(160 / 255f, 255 / 255f, 75 / 255f);
         farmingImage.fillAmount = 0;
         toolImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
@@ -266,6 +268,7 @@ public class PlayerController : MonoBehaviour
         CinemachinePOVExtension.horizontalSpeed = 10;
         questAcceptUi.SetActive(false);
         questManager.AddQuest(quest);
+        AddQuestUI(quest);
         if (quest.GetQuestType() == QuestType.Talk)
         {
             Destroy(giver);
@@ -298,6 +301,11 @@ public class PlayerController : MonoBehaviour
         }
 
         return inRange;
+    }
+
+    private void AddQuestUI(Quest quest)
+    {
+        missionsUI.transform.GetChild(1).transform.GetChild(1).GetComponent<TextMeshProUGUI>().text += "- "+quest.GetGoal() + " 0/" +quest.GetGoalQuantity(); 
     }
 
     private void StopCollecting()
