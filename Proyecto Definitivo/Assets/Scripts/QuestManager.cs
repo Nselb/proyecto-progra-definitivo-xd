@@ -49,6 +49,17 @@ public class QuestManager : MonoBehaviour
             questsInProgress.Add(new QuestProgress(quest.GetId(),  quest.GetGoal(), quest.GetGoalQuantity()));
         }
     }
+    public QuestProgress GetQuestProgress(Quest quest)
+    {
+        foreach (var item in questsInProgress)
+        {
+            if (item.GetQuestId() == quest.GetId())
+            {
+                return item;
+            }
+        }
+        return null;
+    }
     public void CompleteQuest(Quest quest)
     {
         completed.Add(quest);

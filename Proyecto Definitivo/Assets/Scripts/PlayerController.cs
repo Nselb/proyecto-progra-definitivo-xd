@@ -378,7 +378,13 @@ public class PlayerController : MonoBehaviour
             c.vida--;
             farmingImage.fillAmount = 0;
             wood += c.dropQuantity;
-
+            foreach (var item in questManager.quests)
+            {
+                if (item.GetQuestType() == QuestType.Gather)
+                {
+                    questManager.GetQuestProgress(item).UpdateProgress(wood);
+                }
+            }
             StartCoroutine("ShowInfoText", c);
         }
         c.Die();
