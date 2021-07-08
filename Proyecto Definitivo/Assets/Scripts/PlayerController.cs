@@ -212,15 +212,17 @@ public class PlayerController : MonoBehaviour
         }
         #endregion COLLECT
         #region ATTACK
-        if (inputManager.PlayerAttackedThisFrame() && cooldown)
+        if (inputManager.PlayerAttackedThisFrame() && cooldown && equipado.Equals(espada))
         {
             foreach (var item in AttackCone())
             {
                 item.GetComponent<EnemyScript>().GetDamage(damage);
             }
-            StartCoroutine(CooldownCorroutine(5));
-        }
+            espada.GetComponent<Animation>().Play();
+            StartCoroutine(CooldownCorroutine(espada.GetComponent<Animation>().GetClip("Sword").length));
+        } 
         #endregion ATTACK
+
         #region EQUIP
         if (Keyboard.current.digit1Key.wasPressedThisFrame)
         {
@@ -399,6 +401,7 @@ public class PlayerController : MonoBehaviour
     {
         cooldown = false;
         yield return new WaitForSeconds(duration);
+        espada.GetComponent<Animation>().Stop();
         cooldown = true;
     }
     public void OnTriggerEnter(Collider other)
