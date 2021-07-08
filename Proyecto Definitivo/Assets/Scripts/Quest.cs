@@ -17,11 +17,14 @@ public class Quest
     [SerializeField]
     private int itemId;
     [SerializeField]
-    private int itemQuantity;
+    private int goalQuantity;
     [SerializeField]
     private int xp;
+    [SerializeField]
+    private string goal;
 
-    public Quest(string desc, string objt, QuestType typex, int xp)
+
+    public Quest(string desc, string objt, QuestType typex, int xp, string goal)
     {
         id = currentId++;
         description = desc;
@@ -30,9 +33,10 @@ public class Quest
         target = null;
         this.xp = xp;
         itemId = -1;
-        itemQuantity = -1;
+        this.goalQuantity = -1;
+        this.goal = goal;
     }
-    public Quest(string desc, string objt, QuestType typex, int xp, GameObject targ)
+    public Quest(string desc, string objt, QuestType typex, int xp, GameObject targ, string goal,int goalQuantity)
     {
         id = currentId++;
         description = desc;
@@ -41,9 +45,10 @@ public class Quest
         target = targ;
         this.xp = xp;
         itemId = -1;
-        itemQuantity = -1;
+        this.goalQuantity = goalQuantity;
+        this.goal = goal;
     }
-    public Quest(string desc, string objt, QuestType typex, int xp, int itemId, int itemQuantity)
+    public Quest(string desc, string objt, QuestType typex, int xp, int itemId, int itemQuantity, string goal)
     {
         id = currentId++;
         description = desc;
@@ -52,7 +57,8 @@ public class Quest
         target = null;
         this.xp = xp;
         this.itemId = itemId;
-        this.itemQuantity = itemQuantity;
+        this.goalQuantity = itemQuantity;
+        this.goal = goal;
     }
 
     public int GetXp()
@@ -79,9 +85,13 @@ public class Quest
     {
         return this.itemId;
     }
-    public int GetItemQuantity()
+    public int GetGoalQuantity()
     {
-        return this.itemQuantity;
+        return this.goalQuantity;
+    }
+    public string GetGoal()
+    {
+        return this.goal;
     }
 }
 
