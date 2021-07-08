@@ -217,6 +217,7 @@ public class PlayerController : MonoBehaviour
                 item.GetComponent<EnemyScript>().GetDamage(damage);
             }
             espada.GetComponent<Animation>().Play();
+            PlaySwordAttack();
             StartCoroutine(CooldownCorroutine(espada.GetComponent<Animation>().GetClip("Sword").length));
         }
         #endregion ATTACK
