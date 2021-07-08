@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
         hacha.SetActive(false);
         pickaxe.SetActive(false);
         espada.SetActive(false);
-        arco.SetActive(false);
+        //arco.SetActive(false);
     }
 
     public void Update()
@@ -119,16 +119,23 @@ public class PlayerController : MonoBehaviour
                     if (Keyboard.current.eKey.wasPressedThisFrame)
                     {
                         farmingImage.fillAmount = 0;
-                        StartCoroutine("Collect", hit.collider.gameObject);
                         ResourceType type = hit.collider.gameObject.GetComponent<Collectable>().type;
                         switch (type)
                         {
                             case ResourceType.Metal:
                             case ResourceType.Rock:
-                                pickaxe.GetComponent<Animation>().Play();
+                                if (equipado.Equals(pickaxe))
+                                {
+                                    pickaxe.GetComponent<Animation>().Play();
+                                    StartCoroutine("Collect", hit.collider.gameObject);
+                                }
                                 break;
                             case ResourceType.Wood:
-                                hacha.GetComponent<Animation>().Play();
+                                if (equipado.Equals(hacha))
+                                {
+                                    hacha.GetComponent<Animation>().Play();
+                                    StartCoroutine("Collect", hit.collider.gameObject);
+                                }
                                 break;
                         }
 
@@ -221,7 +228,7 @@ public class PlayerController : MonoBehaviour
             equipado.SetActive(true);
             hacha.SetActive(false);
             pickaxe.SetActive(false);
-            arco.SetActive(false);
+            //arco.SetActive(false);
         }
         if (Keyboard.current.digit3Key.wasPressedThisFrame)
         {
@@ -229,7 +236,7 @@ public class PlayerController : MonoBehaviour
             equipado.SetActive(true);
             hacha.SetActive(false);
             espada.SetActive(false);
-            arco.SetActive(false);
+            //arco.SetActive(false);
         }
         if (Keyboard.current.digit4Key.wasPressedThisFrame)
         {
@@ -237,7 +244,7 @@ public class PlayerController : MonoBehaviour
             equipado.SetActive(true);
             pickaxe.SetActive(false);
             espada.SetActive(false);
-            arco.SetActive(false);
+            //arco.SetActive(false);
         }
         #endregion EQUIP
     }
