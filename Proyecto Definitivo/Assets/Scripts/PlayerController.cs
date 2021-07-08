@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     public AudioSource weaponAudio;
     public AudioClip swordswing;
     public AudioClip walkgrass;
+    public GameObject mapa;
 
     #endregion PUBLICAS
 
@@ -121,6 +122,12 @@ public class PlayerController : MonoBehaviour
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
         }
         controller.Move(playerVelocity * Time.deltaTime);
+        if(Keyboard.current.mKey.wasPressedThisFrame)
+        {
+            mapa.SetActive(!mapa.activeSelf);
+        }
+            
+
         #region COLLECT AND INTERACT
         int rayLayer = ~(1 << 8);
         if (Physics.Raycast(ray, out RaycastHit hit, 80f, rayLayer))
