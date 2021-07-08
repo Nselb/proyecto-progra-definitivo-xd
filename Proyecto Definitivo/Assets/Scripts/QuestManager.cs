@@ -32,11 +32,30 @@ public class QuestManager : MonoBehaviour
     }
     public void AddInProgress(Quest quest)
     {
-        questsInProgress.Add(new QuestProgress(quest.GetId(),  quest.GetGoal(), quest.GetGoalQuantity()));
+        bool has = false;
+        foreach (var item in questsInProgress)
+        {
+            if (item.GetQuestId() == quest.GetId())
+            {
+                has = true;
+            }
+        }
+        if (!has)
+        {
+            questsInProgress.Add(new QuestProgress(quest.GetId(),  quest.GetGoal(), quest.GetGoalQuantity()));
+        }
     }
     public void CompleteQuest(Quest quest)
     {
         completed.Add(quest);
+        foreach (var item in questsInProgress)
+        {
+            if (quest.GetId() == item.GetQuestId())
+            {
+                questsInProgress.Remove(item);
+                break;
+            }
+        }
         quests.Remove(quest);
         player.AddXP(quest.GetXp());
     }

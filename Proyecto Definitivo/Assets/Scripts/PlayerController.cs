@@ -185,17 +185,17 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Keyboard.current.eKey.wasPressedThisFrame)
                     {
-                        if (other.GetComponent<Quester>())
+                        if (other.GetComponent<Quester>() != null)
                         {
                             Quest quest = other.GetComponent<Quester>().GetQuest();
-                            questAcceptUi.transform.GetChild(2).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            questAcceptUi.transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
                             $"Descripcion:\n{quest.GetDescription()}\n\nObjetivo:\n{quest.GetObjective()}\nRecompensas:\n{string.Format("{0,15:N0} xp", quest.GetXp())}";
                             speed = 0;
                             Cursor.lockState = CursorLockMode.Confined;
                             CinemachinePOVExtension.verticalSpeed = 0;
                             CinemachinePOVExtension.horizontalSpeed = 0;
                             questAcceptUi.SetActive(true);
-                            questAcceptUi.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(delegate { OnAcceptQuest(quest, other.GetComponent<Quester>()); });
+                            questAcceptUi.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(delegate { OnAcceptQuest(quest, other.GetComponent<Quester>()); });
                         }
                     }
                 }
@@ -220,6 +220,7 @@ public class PlayerController : MonoBehaviour
                     if (Keyboard.current.eKey.wasPressedThisFrame && target)
                     {
                         questManager.CompleteQuest(questToCheck);
+                        UpdateQuestsList();
                     }
                 }
             }
@@ -316,6 +317,11 @@ public class PlayerController : MonoBehaviour
     private void AddQuestUI(Quest quest)
     {
         questManager.AddInProgress(quest);
+        UpdateQuestsList();
+    }
+
+    public void UpdateQuestsList()
+    {
         string missions = "";
         foreach (var item in questManager.questsInProgress)
         {
