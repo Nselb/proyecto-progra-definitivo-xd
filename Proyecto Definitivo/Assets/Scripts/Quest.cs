@@ -8,6 +8,8 @@ public class Quest
     private string objective;
     private QuestType type;
     private GameObject target;
+    private int itemId;
+    private int itemQuantity;
     private int xp;
 
     public Quest(string desc, string objt, QuestType typex, int xp)
@@ -18,6 +20,8 @@ public class Quest
         type = typex;
         target = null;
         this.xp = xp;
+        itemId = -1;
+        itemQuantity = -1;
     }
     public Quest(string desc, string objt, QuestType typex, int xp, GameObject targ)
     {
@@ -27,6 +31,19 @@ public class Quest
         type = typex;
         target = targ;
         this.xp = xp;
+        itemId = -1;
+        itemQuantity = -1;
+    }
+    public Quest(string desc, string objt, QuestType typex, int xp, int itemId, int itemQuantity)
+    {
+        id = currentId++;
+        description = desc;
+        objective = objt;
+        type = typex;
+        target = null;
+        this.xp = xp;
+        this.itemId = itemId;
+        this.itemQuantity = itemQuantity;
     }
 
     public int GetXp()
@@ -49,9 +66,17 @@ public class Quest
     {
         return this.target;
     }
+    public int GetItemId()
+    {
+        return this.itemId;
+    }
+    public int GetItemQuantity()
+    {
+        return this.itemQuantity;
+    }
 }
 
 public enum QuestType
 {
-    Talk, Chrono, Gather
+    Talk, Gather
 }
