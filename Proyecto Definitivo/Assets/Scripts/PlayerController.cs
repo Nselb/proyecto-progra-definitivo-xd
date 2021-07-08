@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     public Transform Arenaout;
     public GameObject placename;
     public AudioClip swordswing;
+    public AudioClip walkgrass;
     #endregion PUBLICAS
 
     #region PRIVADAS
@@ -104,6 +105,12 @@ public class PlayerController : MonoBehaviour
         Vector3 move = new Vector3(inputManager.GetPlayerMovement().x, 0f, inputManager.GetPlayerMovement().y);
         move = cameraTransform.forward * move.z + cameraTransform.right * move.x;
         move.y = 0;
+        if (move != Vector3.zero)
+        {
+            audioSource.clip = walkgrass;
+            audioSource.Play();
+        }
+        else audioSource.Stop();
         controller.Move(move * speed * Time.deltaTime);
         playerVelocity.y += gravity * Time.deltaTime;
         if (inputManager.PlayerJumpedThisFrame() && isGrounded)
