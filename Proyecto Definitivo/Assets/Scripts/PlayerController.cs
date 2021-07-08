@@ -13,11 +13,14 @@ public class PlayerController : MonoBehaviour
     public float comida = 100f;
     public float damage;
     public int xp = 0;
-    [SerializeField]
     private int xpToNextLevel = 1000;
     public int level = 1;
     public float carga;
     private float attackRange;
+    public GameObject pickaxe;
+    public GameObject hacha;
+    public GameObject espada;
+    public GameObject arco;
     [Header("Player Physics")]
     public float speed = 10f;
     public float jumpHeight = 3f;
@@ -33,10 +36,8 @@ public class PlayerController : MonoBehaviour
     public Sprite[] resourceSprites;
     public Transform Arenaout;
     public GameObject placename;
-    public GameObject pickaxe;
-    public GameObject hacha;
-
     #endregion PUBLICAS
+
     #region PRIVADAS
     private Camera mainCamera;
     private CharacterController controller;
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
     private Quaternion startRotation;
     private Quaternion hstartRotation;
     private QuestManager questManager;
+    private GameObject equipado;
     #endregion PRIVADAS
 
     private void Start()
@@ -70,6 +72,10 @@ public class PlayerController : MonoBehaviour
         startRotation = pickaxe.transform.localRotation;
         hstartRotation = hacha.transform.localRotation;
         questManager = QuestManager.Instance;
+        hacha.SetActive(false);
+        pickaxe.SetActive(false);
+        espada.SetActive(false);
+        arco.SetActive(false);
     }
 
     public void Update()
@@ -208,6 +214,24 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(CooldownCorroutine(5));
         }
         #endregion ATTACK
+        #region EQUIP
+            if (Keyboard.current.digit3Key.wasPressedThisFrame)
+        {
+            equipado = pickaxe;
+            equipado.SetActive(true);
+            hacha.SetActive(false);
+            espada.SetActive(false);
+            arco.SetActive(false);
+        }
+        if (Keyboard.current.digit4Key.wasPressedThisFrame)
+        {
+            equipado = hacha;
+            equipado.SetActive(true);
+            pickaxe.SetActive(false);
+            espada.SetActive(false);
+            arco.SetActive(false);
+        }
+        #endregion EQUIP
     }
 
     private void OnCollectionStop()
