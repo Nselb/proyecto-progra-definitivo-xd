@@ -94,6 +94,10 @@ public class PlayerController : MonoBehaviour
         {
             playerVelocity.y = 0f;
         }
+        if (playerVelocity.y > 0)
+        {
+            walkAudio.Stop();
+        }
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         Vector3 move = new Vector3(inputManager.GetPlayerMovement().x, 0f, inputManager.GetPlayerMovement().y);
         move = cameraTransform.forward * move.z + cameraTransform.right * move.x;
