@@ -104,15 +104,7 @@ public class PlayerController : MonoBehaviour
             GameObject other = hit.collider.gameObject;
             if (other.CompareTag("Recolectable"))
             {
-                foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, interactionLayer))
-                {
-                    if (other.Equals(item.gameObject))
-                    {
-                        inRange = true;
-                        break;
-                    }
-                    inRange = false;
-                }
+                inRange = CheckIfNear(other);
                 if (inRange)
                 {
                     SetActiveImages(true, other.GetComponent<Collectable>().type);
@@ -156,15 +148,7 @@ public class PlayerController : MonoBehaviour
             }
             if (other.CompareTag("Quester"))
             {
-                foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, interactionLayer))
-                {
-                    if (other.Equals(item.gameObject))
-                    {
-                        near = true;
-                        break;
-                    }
-                    near = false;
-                }
+                near = CheckIfNear(other);
                 if (near)
                 {
                     if (Keyboard.current.eKey.wasPressedThisFrame)
@@ -175,15 +159,7 @@ public class PlayerController : MonoBehaviour
             }
             if (other.CompareTag("TalkTarget"))
             {
-                foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, interactionLayer))
-                {
-                    if (other.Equals(item.gameObject))
-                    {
-                        near = true;
-                        break;
-                    }
-                    near = false;
-                }
+                near = CheckIfNear(other);
                 if (near)
                 {
                     bool target = false;
@@ -249,6 +225,22 @@ public class PlayerController : MonoBehaviour
             //arco.SetActive(false);
         }
         #endregion EQUIP
+    }
+
+    private bool CheckIfNear(GameObject other)
+    {
+        bool inRange = false;
+        foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, interactionLayer))
+        {
+            if (other.Equals(item.gameObject))
+            {
+                inRange = true;
+                break;
+            }
+            inRange = false;
+        }
+
+        return inRange;
     }
 
     private void OnCollectionStop()
