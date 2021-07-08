@@ -385,6 +385,7 @@ public class PlayerController : MonoBehaviour
                     questManager.GetQuestProgress(item).UpdateProgress(wood);
                 }
             }
+            UpdateQuestsList();
             StartCoroutine("ShowInfoText", c);
         }
         c.Die();
