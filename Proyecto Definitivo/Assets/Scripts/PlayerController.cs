@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     public Sprite[] resourceSprites;
     public Transform Arenaout;
     public GameObject placename;
+    public AudioClip swordswing;
     #endregion PUBLICAS
 
     #region PRIVADAS
@@ -52,8 +53,18 @@ public class PlayerController : MonoBehaviour
     private Quaternion hstartRotation;
     private QuestManager questManager;
     private GameObject equipado;
+    private AudioSource audioSource;
     #endregion PRIVADAS
 
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+    public void PlaySwordAttack()
+    {
+        audioSource.clip = swordswing;
+        audioSource.Play();
+    }
     private void Start()
     {
         mainCamera = Camera.main;
@@ -76,6 +87,7 @@ public class PlayerController : MonoBehaviour
         pickaxe.SetActive(false);
         espada.SetActive(false);
         //arco.SetActive(false);
+        
     }
 
     public void Update()
