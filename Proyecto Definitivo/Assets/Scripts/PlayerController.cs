@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
+    private const float PLAYER_SPEED = 10f;
     #region PUBLICAS
     [Header("Player Stats")]
     public float vida = 100f;
@@ -22,7 +23,7 @@ public class PlayerController : MonoBehaviour
     public GameObject espada;
     public GameObject arco;
     [Header("Player Physics")]
-    public float speed = 10f;
+    public float speed = PLAYER_SPEED;
     public float jumpHeight = 3f;
     public float gravity = -9.81f;
     public float collectDistance = 5f;
@@ -44,6 +45,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private Vector3 playerVelocity;
     private GameObject ui;
+    private GameObject questAcceptUi;
     private Image life;
     private InputManager inputManager;
     private Transform cameraTransform;
@@ -76,6 +78,7 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         ui = GameObject.Find("UI");
         life = ui.transform.GetChild(2).GetComponent<Image>();
+        questAcceptUi = ui.transform.GetChild(6).gameObject;
         life.color = new Color(160 / 255f, 255 / 255f, 75 / 255f);
         farmingImage.fillAmount = 0;
         toolImage.transform.position = new Vector2(Screen.width, Screen.height) / 2;
@@ -108,7 +111,7 @@ public class PlayerController : MonoBehaviour
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
         }
         controller.Move(playerVelocity * Time.deltaTime);
-        #region COLLECT
+        #region COLLECT AND INTERACT
         int rayLayer = ~(1 << 8);
         if (Physics.Raycast(ray, out RaycastHit hit, 80f, rayLayer))
         {
@@ -146,17 +149,17 @@ public class PlayerController : MonoBehaviour
                     }
                     if (Keyboard.current.eKey.wasReleasedThisFrame)
                     {
-                        OnCollectionStop();
+                        StopCollecting();
                     }
                 }
                 else
                 {
-                    OnCollectionStop();
+                    StopCollecting();
                 }
             }
             else
             {
-                OnCollectionStop();
+                StopCollecting();
             }
             if (other.CompareTag("Quester"))
             {
@@ -165,7 +168,14 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Keyboard.current.eKey.wasPressedThisFrame)
                     {
-                        questManager.AddQuest(other.GetComponent<Quester>().GetQuest());
+                        Quest quest = other.GetComponent<Quester>().GetQuest();
+                        questAcceptUi.transform.GetChild(2).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                        $"Descripcion:\n{quest.GetDescription()}\n\nObjetivo:\n{quest.GetObjective()}";
+                        speed = 0;
+                        Cursor.lockState = CursorLockMode.Confined;
+                        CinemachinePOVExtension.verticalSpeed = 0;
+                        CinemachinePOVExtension.horizontalSpeed = 0;
+                        questAcceptUi.SetActive(true);
                     }
                 }
             }
@@ -192,15 +202,15 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-
         }
         else
         {
-            OnCollectionStop();
+            StopCollecting();
         }
         #endregion COLLECT
+
         #region ATTACK
-        if (inputManager.PlayerAttackedThisFrame() && cooldown && equipado.Equals(espada))
+        if (inputManager.PlayerAttackedThisFrame() && cooldown && equipado != null && equipado.Equals(espada))
         {
             foreach (var item in AttackCone())
             {
@@ -208,7 +218,7 @@ public class PlayerController : MonoBehaviour
             }
             espada.GetComponent<Animation>().Play();
             StartCoroutine(CooldownCorroutine(espada.GetComponent<Animation>().GetClip("Sword").length));
-        } 
+        }
         #endregion ATTACK
 
         #region EQUIP
@@ -239,6 +249,16 @@ public class PlayerController : MonoBehaviour
         #endregion EQUIP
     }
 
+    public void OnDeclineQuest()
+    {
+        speed = PLAYER_SPEED;
+        Cursor.lockState = CursorLockMode.Locked;
+        CinemachinePOVExtension.verticalSpeed = 10;
+        CinemachinePOVExtension.horizontalSpeed = 10;
+        questAcceptUi.SetActive(false);
+    }
+
+
     private bool CheckIfNear(GameObject other)
     {
         bool inRange = false;
@@ -255,7 +275,7 @@ public class PlayerController : MonoBehaviour
         return inRange;
     }
 
-    private void OnCollectionStop()
+    private void StopCollecting()
     {
         farmingImage.fillAmount = 0;
         SetActiveImages(false, ResourceType.All);

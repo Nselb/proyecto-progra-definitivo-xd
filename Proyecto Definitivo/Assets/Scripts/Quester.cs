@@ -14,6 +14,7 @@ public class Quester : MonoBehaviour
     [Header("Gather type")]
     public int itemId;
     public int itemQuantity;
+    public bool inProgress;
     private Quest quest;
 
     private void Start()
@@ -28,8 +29,8 @@ public class Quester : MonoBehaviour
         {
             quest.GetTarget().tag = "TalkTarget";
             quest.GetTarget().layer = LayerMask.NameToLayer("Interactable");
-            Destroy(this, 1);
         }
+        inProgress = true;
         return quest;
     }
     public void CompleteGatherQuest()
