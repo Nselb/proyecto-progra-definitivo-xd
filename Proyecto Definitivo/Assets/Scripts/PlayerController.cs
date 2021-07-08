@@ -37,8 +37,11 @@ public class PlayerController : MonoBehaviour
     public Sprite[] resourceSprites;
     public Transform Arenaout;
     public GameObject placename;
+    public AudioSource walkAudio;
+    public AudioSource weaponAudio;
     public AudioClip swordswing;
     public AudioClip walkgrass;
+
     #endregion PUBLICAS
 
     #region PRIVADAS
@@ -56,18 +59,8 @@ public class PlayerController : MonoBehaviour
     private Quaternion hstartRotation;
     private QuestManager questManager;
     private GameObject equipado;
-    private AudioSource audioSource;
-    #endregion PRIVADAS
 
-    private void Awake()
-    {
-        audioSource = GetComponent<AudioSource>();
-    }
-    public void PlaySwordAttack()
-    {
-        audioSource.clip = swordswing;
-        audioSource.Play();
-    }
+    #endregion PRIVADAS
     private void Start()
     {
         mainCamera = Camera.main;
@@ -91,7 +84,7 @@ public class PlayerController : MonoBehaviour
         pickaxe.SetActive(false);
         espada.SetActive(false);
         //arco.SetActive(false);
-        
+
     }
 
     public void Update()
@@ -107,10 +100,13 @@ public class PlayerController : MonoBehaviour
         move.y = 0;
         if (move != Vector3.zero)
         {
-            audioSource.clip = walkgrass;
-            audioSource.Play();
+            walkAudio.clip = walkgrass;
+            if (!walkAudio.isPlaying)
+            {
+                walkAudio.Play();
+            }
         }
-        else audioSource.Stop();
+        else walkAudio.Stop();
         controller.Move(move * speed * Time.deltaTime);
         playerVelocity.y += gravity * Time.deltaTime;
         if (inputManager.PlayerJumpedThisFrame() && isGrounded)
@@ -256,7 +252,6 @@ public class PlayerController : MonoBehaviour
         }
         #endregion EQUIP
     }
-
     public void OnDeclineQuest()
     {
         speed = PLAYER_SPEED;
@@ -265,8 +260,11 @@ public class PlayerController : MonoBehaviour
         CinemachinePOVExtension.horizontalSpeed = 10;
         questAcceptUi.SetActive(false);
     }
-
-
+    public void PlaySwordAttack()
+    {
+        weaponAudio.clip = swordswing;
+        weaponAudio.Play();
+    }
     private bool CheckIfNear(GameObject other)
     {
         bool inRange = false;
