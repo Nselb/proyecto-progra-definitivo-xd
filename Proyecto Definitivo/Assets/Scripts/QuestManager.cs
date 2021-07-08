@@ -28,7 +28,7 @@ public class QuestManager : MonoBehaviour
 
     public void AddQuest(Quest quest)
     {
-        if (!quests.Contains(quest)) quests.Add(quest);
+        if (!quests.Contains(quest) && !completed.Contains(quest)) quests.Add(quest);
     }
     public void AddInProgress(Quest quest)
     {
@@ -39,6 +39,10 @@ public class QuestManager : MonoBehaviour
             {
                 has = true;
             }
+        }
+        if (completed.Contains(quest))
+        {
+            has = true;
         }
         if (!has)
         {

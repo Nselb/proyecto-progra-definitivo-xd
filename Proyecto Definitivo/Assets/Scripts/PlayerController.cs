@@ -195,7 +195,7 @@ public class PlayerController : MonoBehaviour
                             CinemachinePOVExtension.verticalSpeed = 0;
                             CinemachinePOVExtension.horizontalSpeed = 0;
                             questAcceptUi.SetActive(true);
-                            questAcceptUi.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(delegate { OnAcceptQuest(quest, other.GetComponent<Quester>()); });
+                            questAcceptUi.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() => OnAcceptQuest(quest, other.GetComponent<Quester>()));
                         }
                     }
                 }
@@ -219,6 +219,7 @@ public class PlayerController : MonoBehaviour
                     }
                     if (Keyboard.current.eKey.wasPressedThisFrame && target)
                     {
+                        other.tag = "Untagged";
                         questManager.CompleteQuest(questToCheck);
                         UpdateQuestsList();
                     }
