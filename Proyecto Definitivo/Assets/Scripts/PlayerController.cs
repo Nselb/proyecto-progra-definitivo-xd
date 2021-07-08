@@ -215,7 +215,15 @@ public class PlayerController : MonoBehaviour
         }
         #endregion ATTACK
         #region EQUIP
-            if (Keyboard.current.digit3Key.wasPressedThisFrame)
+        if (Keyboard.current.digit1Key.wasPressedThisFrame)
+        {
+            equipado = espada;
+            equipado.SetActive(true);
+            hacha.SetActive(false);
+            pickaxe.SetActive(false);
+            arco.SetActive(false);
+        }
+        if (Keyboard.current.digit3Key.wasPressedThisFrame)
         {
             equipado = pickaxe;
             equipado.SetActive(true);
