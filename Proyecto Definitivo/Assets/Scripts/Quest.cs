@@ -2,7 +2,6 @@ using UnityEngine;
 [System.Serializable]
 public class Quest
 {
-    
     private static int currentId = 0;
     [SerializeField]
     private int id;
@@ -22,7 +21,6 @@ public class Quest
     private int xp;
     [SerializeField]
     private string goal;
-
 
     public Quest(string desc, string objt, QuestType typex, int xp, string goal)
     {
