@@ -58,7 +58,10 @@ public class Quest
         this.goalQuantity = itemQuantity;
         this.goal = goal;
     }
-
+    public int GetId()
+    {
+        return this.id;
+    }
     public int GetXp()
     {
         return this.xp;

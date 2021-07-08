@@ -178,15 +178,18 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Keyboard.current.eKey.wasPressedThisFrame)
                     {
-                        Quest quest = other.GetComponent<Quester>().GetQuest();
-                        questAcceptUi.transform.GetChild(2).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
-                        $"Descripcion:\n{quest.GetDescription()}\n\nObjetivo:\n{quest.GetObjective()}\nRecompensas:\n{string.Format("{0,15:N0} xp", quest.GetXp())}";
-                        speed = 0;
-                        Cursor.lockState = CursorLockMode.Confined;
-                        CinemachinePOVExtension.verticalSpeed = 0;
-                        CinemachinePOVExtension.horizontalSpeed = 0;
-                        questAcceptUi.SetActive(true);
-                        questAcceptUi.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(delegate { OnAcceptQuest(quest, other.GetComponent<Quester>()); });
+                        if (other.GetComponent<Quester>())
+                        {
+                            Quest quest = other.GetComponent<Quester>().GetQuest();
+                            questAcceptUi.transform.GetChild(2).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            $"Descripcion:\n{quest.GetDescription()}\n\nObjetivo:\n{quest.GetObjective()}\nRecompensas:\n{string.Format("{0,15:N0} xp", quest.GetXp())}";
+                            speed = 0;
+                            Cursor.lockState = CursorLockMode.Confined;
+                            CinemachinePOVExtension.verticalSpeed = 0;
+                            CinemachinePOVExtension.horizontalSpeed = 0;
+                            questAcceptUi.SetActive(true);
+                            questAcceptUi.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(delegate { OnAcceptQuest(quest, other.GetComponent<Quester>()); });
+                        }
                     }
                 }
             }
@@ -305,7 +308,13 @@ public class PlayerController : MonoBehaviour
 
     private void AddQuestUI(Quest quest)
     {
-        missionsUI.transform.GetChild(1).transform.GetChild(1).GetComponent<TextMeshProUGUI>().text += "- "+quest.GetGoal() + " 0/" +quest.GetGoalQuantity(); 
+        questManager.AddInProgress(quest);
+        string missions = "";
+        foreach (var item in questManager.questsInProgress)
+        {
+            missions += item.ToString() + "\n";
+        }
+        missionsUI.transform.GetChild(1).transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = missions;
     }
 
     private void StopCollecting()
