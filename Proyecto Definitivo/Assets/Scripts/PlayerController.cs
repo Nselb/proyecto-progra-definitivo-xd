@@ -369,6 +369,7 @@ public class PlayerController : MonoBehaviour
     {
         level++;
         xpToNextLevel += 1000 + (50 * level);
+        ui.transform.GetChild(7).GetComponent<TextMeshProUGUI>().text = level.ToString();
     }
 
     IEnumerator Collect(GameObject collectable)
