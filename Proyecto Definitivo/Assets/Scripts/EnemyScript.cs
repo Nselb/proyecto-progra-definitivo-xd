@@ -79,6 +79,7 @@ public class EnemyScript : MonoBehaviour
         vida -= damage;
         if (vida <= 0)
         {
+            player.GetComponent<PlayerController>().AddXP(200);
             Destroy(this.gameObject);
         }
     }
