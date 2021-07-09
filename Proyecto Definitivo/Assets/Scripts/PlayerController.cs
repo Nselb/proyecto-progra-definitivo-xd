@@ -383,6 +383,10 @@ public class PlayerController : MonoBehaviour
                 if (item.GetQuestType() == QuestType.Gather)
                 {
                     questManager.GetQuestProgress(item).UpdateProgress(wood);
+                    if (questManager.GetQuestProgress(item).GetCompleted())
+                    {
+                        questManager.CompleteQuest(item);
+                    }
                 }
             }
             UpdateQuestsList();

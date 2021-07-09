@@ -4,6 +4,7 @@ public class QuestProgress
     private string questProgress;
     private int currentProgress;
     private int questQuantity;
+    private bool completed;
     public QuestProgress(int questId, string questProgress, int questQuantity)
     {
         this.questId = questId;
@@ -25,6 +26,14 @@ public class QuestProgress
     public void UpdateProgress(int progress)
     {
         currentProgress = progress;
+        if (currentProgress == questQuantity)
+        {
+            completed = true;
+        }
+    }
+    public bool GetCompleted()
+    {
+        return this.completed;
     }
     public override string ToString()
     {
