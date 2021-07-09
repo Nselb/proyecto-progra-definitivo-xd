@@ -513,7 +513,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator CooldownCorroutine(float duration)
     {
         cooldown = false;
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(duration/2f);
         espada.GetComponent<Animation>().Stop();
         cooldown = true;
     }
