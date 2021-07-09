@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
     private int wood;
     private int stone;
     private Image xpFill;
+    public GameObject missionsProgress;
 
     #endregion PRIVADAS
     private void Start()
@@ -93,6 +94,7 @@ public class PlayerController : MonoBehaviour
         //arco.SetActive(false);
         xpFill = ui.transform.GetChild(3).GetComponent<Image>();
         xpFill.fillAmount = 0f;
+        ui.transform.GetChild(7).GetComponent<TextMeshProUGUI>().text = "Level: " + level.ToString();
     }
 
     public void Update()
@@ -126,11 +128,11 @@ public class PlayerController : MonoBehaviour
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
         }
         controller.Move(playerVelocity * Time.deltaTime);
-        if(Keyboard.current.mKey.wasPressedThisFrame)
+        if (Keyboard.current.mKey.wasPressedThisFrame)
         {
             mapa.SetActive(!mapa.activeSelf);
         }
-            
+
 
         #region COLLECT AND INTERACT
         int rayLayer = ~(1 << 8);
@@ -225,7 +227,7 @@ public class PlayerController : MonoBehaviour
                     {
                         other.tag = "Untagged";
                         questManager.CompleteQuest(questToCheck);
-                        
+
                         UpdateQuestsList();
                     }
                 }
@@ -236,7 +238,14 @@ public class PlayerController : MonoBehaviour
             StopCollecting();
         }
         #endregion COLLECT
-
+        if (Keyboard.current.lKey.wasPressedThisFrame)
+        {
+            if (missionsProgress.activeSelf)
+            {
+                missionsProgress.SetActive(false);
+            } else missionsProgress.SetActive(true);
+            
+        }
         #region ATTACK
         if (inputManager.PlayerAttackedThisFrame() && cooldown && equipado != null && equipado.Equals(espada))
         {
@@ -369,7 +378,7 @@ public class PlayerController : MonoBehaviour
     {
         level++;
         xpToNextLevel += 1000 + (50 * level);
-        ui.transform.GetChild(7).GetComponent<TextMeshProUGUI>().text = level.ToString();
+        ui.transform.GetChild(7).GetComponent<TextMeshProUGUI>().text = "Level: " + level.ToString();
     }
 
     IEnumerator Collect(GameObject collectable)
