@@ -64,6 +64,7 @@ public class PlayerController : MonoBehaviour
     private GameObject missionsUI;
     private int wood;
     private int stone;
+    private Image xpFill;
 
     #endregion PRIVADAS
     private void Start()
@@ -90,7 +91,8 @@ public class PlayerController : MonoBehaviour
         pickaxe.SetActive(false);
         espada.SetActive(false);
         //arco.SetActive(false);
-
+        xpFill = ui.transform.GetChild(3).GetComponent<Image>();
+        xpFill.fillAmount = 0f;
     }
 
     public void Update()
@@ -277,7 +279,7 @@ public class PlayerController : MonoBehaviour
     }
     public void UpdateXp()
     {
-        ui.transform.GetChild(3).GetComponent<Image>().fillAmount = xp / xpToNextLevel;
+        xpFill.fillAmount = (float)xp / (float)xpToNextLevel;
     }
     public void OnAcceptQuest(Quest quest, Quester giver)
     {
