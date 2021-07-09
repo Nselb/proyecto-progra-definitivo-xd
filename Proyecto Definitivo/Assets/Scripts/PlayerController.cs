@@ -223,6 +223,7 @@ public class PlayerController : MonoBehaviour
                     {
                         other.tag = "Untagged";
                         questManager.CompleteQuest(questToCheck);
+                        
                         UpdateQuestsList();
                     }
                 }
@@ -273,6 +274,10 @@ public class PlayerController : MonoBehaviour
             //arco.SetActive(false);
         }
         #endregion EQUIP
+    }
+    public void UpdateXp()
+    {
+        ui.transform.GetChild(3).GetComponent<Image>().fillAmount = xp / xpToNextLevel;
     }
     public void OnAcceptQuest(Quest quest, Quester giver)
     {
@@ -355,6 +360,7 @@ public class PlayerController : MonoBehaviour
             AddXP(left);
         }
         else xp += quantity;
+        UpdateXp();
     }
 
     private void LevelUp()
