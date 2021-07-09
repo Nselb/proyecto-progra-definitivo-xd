@@ -238,7 +238,7 @@ public class PlayerController : MonoBehaviour
             StopCollecting();
         }
         #endregion COLLECT
-        if (Keyboard.current.lKey.wasPressedThisFrame)
+        if (Keyboard.current.nKey.wasPressedThisFrame)
         {
             if (missionsProgress.activeSelf)
             {
