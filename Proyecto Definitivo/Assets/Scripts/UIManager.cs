@@ -33,15 +33,9 @@ public class UIManager : MonoBehaviour
     {
         MainMenu.SetActive(false);
         SettingsMenu.SetActive(true);
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
     }
     public void OnBackClicked()
     {
         MainMenu.SetActive(true);
-        SettingsMenu.SetActive(false);
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        EventSystem.current.SetSelectedGameObject(GameObject.FindWithTag("NewGame"));
     }
 }

@@ -27,8 +27,7 @@ public class PlayerController : MonoBehaviour
     public float speed = PLAYER_SPEED;
     public float jumpHeight = 3f;
     public float gravity = -9.81f;
-    public float collectDistance = 5f;
-    public LayerMask interactionLayer;
+    public float collectDistance = 2f;
     public LayerMask attackLayer;
     [Header("Recollection")]
     public GameObject collectInfo;
@@ -43,7 +42,6 @@ public class PlayerController : MonoBehaviour
     public AudioClip swordswing;
     public AudioClip walkgrass;
     public GameObject mapa;
-
     #endregion PUBLICAS
 
     #region PRIVADAS
@@ -56,7 +54,6 @@ public class PlayerController : MonoBehaviour
     private InputManager inputManager;
     private Transform cameraTransform;
     private bool cooldown = true;
-    private bool near;
     private Quaternion startRotation;
     private Quaternion hstartRotation;
     private QuestManager questManager;
@@ -74,7 +71,7 @@ public class PlayerController : MonoBehaviour
         cameraTransform = mainCamera.transform;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = true;
-        SetActiveImages(false, ResourceType.All);
+        SetActiveImages(false, ResourceType.Default);
         inputManager = InputManager.Instance;
         controller = GetComponent<CharacterController>();
         ui = GameObject.Find("UI");
@@ -99,6 +96,7 @@ public class PlayerController : MonoBehaviour
 
     public void Update()
     {
+        #region MOVE
         bool isGrounded = controller.isGrounded;
         if (isGrounded && playerVelocity.y < 0)
         {
@@ -108,7 +106,6 @@ public class PlayerController : MonoBehaviour
         {
             walkAudio.Stop();
         }
-        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         Vector3 move = new Vector3(inputManager.GetPlayerMovement().x, 0f, inputManager.GetPlayerMovement().y);
         move = cameraTransform.forward * move.z + cameraTransform.right * move.x;
         move.y = 0;
@@ -128,54 +125,45 @@ public class PlayerController : MonoBehaviour
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
         }
         controller.Move(playerVelocity * Time.deltaTime);
+        #endregion MOVE
         if (Keyboard.current.mKey.wasPressedThisFrame)
         {
             mapa.SetActive(!mapa.activeSelf);
         }
-
-
+        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         #region COLLECT AND INTERACT
         int rayLayer = ~(1 << 8);
-        if (Physics.Raycast(ray, out RaycastHit hit, 80f, rayLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, collectDistance, rayLayer))
         {
-            bool inRange = false;
             GameObject other = hit.collider.gameObject;
             if (other.CompareTag("Recolectable"))
             {
-                inRange = CheckIfNear(other);
-                if (inRange)
+                SetActiveImages(true, other.GetComponent<Collectable>().type);
+                if (Keyboard.current.eKey.wasPressedThisFrame)
                 {
-                    SetActiveImages(true, other.GetComponent<Collectable>().type);
-                    if (Keyboard.current.eKey.wasPressedThisFrame)
+                    farmingImage.fillAmount = 0;
+                    ResourceType type = hit.collider.gameObject.GetComponent<Collectable>().type;
+                    switch (type)
                     {
-                        farmingImage.fillAmount = 0;
-                        ResourceType type = hit.collider.gameObject.GetComponent<Collectable>().type;
-                        switch (type)
-                        {
-                            case ResourceType.Metal:
-                            case ResourceType.Rock:
-                                if (equipado.Equals(pickaxe))
-                                {
-                                    pickaxe.GetComponent<Animation>().Play();
-                                    StartCoroutine("Collect", hit.collider.gameObject);
-                                }
-                                break;
-                            case ResourceType.Wood:
-                                if (equipado.Equals(hacha))
-                                {
-                                    hacha.GetComponent<Animation>().Play();
-                                    StartCoroutine("Collect", hit.collider.gameObject);
-                                }
-                                break;
-                        }
+                        case ResourceType.Metal:
+                        case ResourceType.Rock:
+                            if (equipado.Equals(pickaxe))
+                            {
+                                pickaxe.GetComponent<Animation>().Play();
+                                StartCoroutine("Collect", hit.collider.gameObject);
+                            }
+                            break;
+                        case ResourceType.Wood:
+                            if (equipado.Equals(hacha))
+                            {
+                                hacha.GetComponent<Animation>().Play();
+                                StartCoroutine("Collect", hit.collider.gameObject);
+                            }
+                            break;
+                    }
 
-                    }
-                    if (Keyboard.current.eKey.wasReleasedThisFrame)
-                    {
-                        StopCollecting();
-                    }
                 }
-                else
+                if (Keyboard.current.eKey.wasReleasedThisFrame)
                 {
                     StopCollecting();
                 }
@@ -186,50 +174,41 @@ public class PlayerController : MonoBehaviour
             }
             if (other.CompareTag("Quester"))
             {
-                near = CheckIfNear(other);
-                if (near)
+                if (Keyboard.current.eKey.wasPressedThisFrame)
                 {
-                    if (Keyboard.current.eKey.wasPressedThisFrame)
+                    if (other.GetComponent<Quester>() != null)
                     {
-                        if (other.GetComponent<Quester>() != null)
-                        {
-                            Quest quest = other.GetComponent<Quester>().GetQuest();
-                            questAcceptUi.transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
-                            $"Descripcion:\n{quest.GetDescription()}\n\nObjetivo:\n{quest.GetObjective()}\nRecompensas:\n{string.Format("{0,15:N0} xp", quest.GetXp())}";
-                            speed = 0;
-                            Cursor.lockState = CursorLockMode.Confined;
-                            CinemachinePOVExtension.verticalSpeed = 0;
-                            CinemachinePOVExtension.horizontalSpeed = 0;
-                            questAcceptUi.SetActive(true);
-                            questAcceptUi.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() => OnAcceptQuest(quest, other.GetComponent<Quester>()));
-                        }
+                        Quest quest = other.GetComponent<Quester>().GetQuest();
+                        questAcceptUi.transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                        $"Descripcion:\n{quest.GetDescription()}\n\nObjetivo:\n{quest.GetObjective()}\nRecompensas:\n{string.Format("{0,15:N0} xp", quest.GetXp())}";
+                        speed = 0;
+                        Cursor.lockState = CursorLockMode.Confined;
+                        CinemachinePOVExtension.verticalSpeed = 0;
+                        CinemachinePOVExtension.horizontalSpeed = 0;
+                        questAcceptUi.SetActive(true);
+                        questAcceptUi.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() => OnAcceptQuest(quest, other.GetComponent<Quester>()));
                     }
                 }
             }
             if (other.CompareTag("TalkTarget"))
             {
-                near = CheckIfNear(other);
-                if (near)
+                bool target = false;
+                Quest questToCheck = null;
+                foreach (var quest in questManager.quests)
                 {
-                    bool target = false;
-                    Quest questToCheck = null;
-                    foreach (var quest in questManager.quests)
+                    if (quest.GetTarget().Equals(other))
                     {
-                        if (quest.GetTarget().Equals(other))
-                        {
-                            target = true;
-                            questToCheck = quest;
-                            break;
-                        }
-                        target = false;
+                        target = true;
+                        questToCheck = quest;
+                        break;
                     }
-                    if (Keyboard.current.eKey.wasPressedThisFrame && target)
-                    {
-                        other.tag = "Untagged";
-                        questManager.CompleteQuest(questToCheck);
-
-                        UpdateQuestsList();
-                    }
+                    target = false;
+                }
+                if (Keyboard.current.eKey.wasPressedThisFrame && target)
+                {
+                    other.tag = "Untagged";
+                    questManager.CompleteQuest(questToCheck);
+                    UpdateQuestsList();
                 }
             }
         }
@@ -243,8 +222,9 @@ public class PlayerController : MonoBehaviour
             if (missionsProgress.activeSelf)
             {
                 missionsProgress.SetActive(false);
-            } else missionsProgress.SetActive(true);
-            
+            }
+            else missionsProgress.SetActive(true);
+
         }
         #region ATTACK
         if (inputManager.PlayerAttackedThisFrame() && cooldown && equipado != null && equipado.Equals(espada))
@@ -317,22 +297,6 @@ public class PlayerController : MonoBehaviour
         weaponAudio.clip = swordswing;
         weaponAudio.Play();
     }
-    private bool CheckIfNear(GameObject other)
-    {
-        bool inRange = false;
-        foreach (var item in Physics.OverlapSphere(transform.position, collectDistance, interactionLayer))
-        {
-            if (other.Equals(item.gameObject))
-            {
-                inRange = true;
-                break;
-            }
-            inRange = false;
-        }
-
-        return inRange;
-    }
-
     private void AddQuestUI(Quest quest)
     {
         questManager.AddInProgress(quest);
@@ -352,7 +316,7 @@ public class PlayerController : MonoBehaviour
     private void StopCollecting()
     {
         farmingImage.fillAmount = 0;
-        SetActiveImages(false, ResourceType.All);
+        SetActiveImages(false, ResourceType.Default);
         StopCoroutine("Collect");
         pickaxe.GetComponent<Animation>().Stop();
         pickaxe.transform.localRotation = startRotation;
@@ -395,18 +359,6 @@ public class PlayerController : MonoBehaviour
             }
             c.vida--;
             farmingImage.fillAmount = 0;
-            wood += c.dropQuantity;
-            foreach (var item in questManager.quests)
-            {
-                if (item.GetQuestType() == QuestType.Gather)
-                {
-                    questManager.GetQuestProgress(item).UpdateProgress(wood);
-                    if (questManager.GetQuestProgress(item).GetCompleted())
-                    {
-                        questManager.CompleteQuest(item);
-                    }
-                }
-            }
             UpdateQuestsList();
             StartCoroutine("ShowInfoText", c);
         }
@@ -448,7 +400,7 @@ public class PlayerController : MonoBehaviour
             case ResourceType.Leather:
                 toolImage.sprite = toolSprites[3];
                 break;
-            case ResourceType.All:
+            case ResourceType.Default:
                 toolImage.gameObject.SetActive(value);
                 break;
         }
@@ -514,7 +466,6 @@ public class PlayerController : MonoBehaviour
     {
         cooldown = false;
         yield return new WaitForSeconds(duration);
-        espada.GetComponent<Animation>().Stop();
         cooldown = true;
     }
     public void OnTriggerEnter(Collider other)
