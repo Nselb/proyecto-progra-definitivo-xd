@@ -236,7 +236,7 @@ public class PlayerController : MonoBehaviour
             espada.GetComponent<Animation>().Play();
             PlaySwordAttack();
             StartCoroutine(CooldownCorroutine(espada.GetComponent<Animation>().GetClip("Sword").length));
-        }
+        } else if (cooldown) espada.GetComponent<Animation>().Stop();
         #endregion ATTACK
 
         #region EQUIP
