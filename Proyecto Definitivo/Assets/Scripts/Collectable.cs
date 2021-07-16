@@ -3,7 +3,7 @@ using UnityEngine;
 
 public enum ResourceType
 {
-    Rock, Wood, Leather, Metal, All, Plant
+    Rock, Wood, Leather, Metal, Default, Plant
 }
 public class Collectable : MonoBehaviour
 {
